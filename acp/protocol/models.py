@@ -9,11 +9,10 @@ and framework-agnostic.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Any
 from uuid import uuid4
-
 
 # ──────────────────────────────────────────────────────────────
 # Identity
@@ -29,7 +28,7 @@ class AgentIdentity:
     description: str = ""
     owner: str = ""  # Human or organization responsible
     public_key_pem: str = ""  # For future cryptographic signing
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     @classmethod
     def create(cls, name: str, description: str = "", owner: str = "") -> AgentIdentity:
@@ -116,13 +115,15 @@ class ServiceListing:
     title: str = ""
     description: str = ""
     capabilities: dict[str, Any] = field(default_factory=dict)
-    pricing: PricingModel = field(default_factory=lambda: PricingModel(model_type=PricingModelType.NEGOTIABLE))
+    pricing: PricingModel = field(
+        default_factory=lambda: PricingModel(model_type=PricingModelType.NEGOTIABLE)
+    )
     availability: AvailabilitySpec = field(default_factory=AvailabilitySpec)
     tags: list[str] = field(default_factory=list)
     reputation_score: float = 100.0  # Initial score for new agents (neutral)
     total_transactions: int = 0
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     def matches_query(self, query: str) -> bool:
         """Simple keyword matching for discovery."""
@@ -236,7 +237,7 @@ class AgentMessage:
     message_type: MessageType = MessageType.ACKNOWLEDGMENT
     payload: dict[str, Any] = field(default_factory=dict)
     references: list[str] = field(default_factory=list)  # References to prior messages
-    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -259,7 +260,7 @@ class AgentMessage:
             payload=data.get("payload", {}),
             references=data.get("references", []),
             timestamp=datetime.fromisoformat(data["timestamp"]) if "timestamp" in data
-            else datetime.now(timezone.utc),
+            else datetime.now(UTC),
         )
 
 
@@ -277,7 +278,7 @@ class NegotiationRound:
     counter_offer: ContractTerms | None = None
     rationale: str = ""  # Agent's reasoning for this offer
     strategy_used: str = ""  # e.g., "tit-for-tat", "concession", "BATNA"
-    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -308,7 +309,7 @@ class NegotiationSession:
     rounds: list[NegotiationRound] = field(default_factory=list)
     status: NegotiationStatus = NegotiationStatus.ACTIVE
     max_rounds: int = 10
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     resolved_at: datetime | None = None
 
     @property
@@ -353,7 +354,7 @@ class ServiceContract:
     status: ContractStatus = ContractStatus.DRAFT
     negotiation_session_id: str | None = None
     delivery_attempts: list[dict[str, Any]] = field(default_factory=list)
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     fulfilled_at: datetime | None = None
 
     @property
@@ -390,7 +391,7 @@ class Rating:
     scores: dict[str, float] = field(default_factory=dict)
     # Typical score dimensions: quality, timeliness, communication, accuracy
     comment: str = ""
-    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     @property
     def overall(self) -> float:
@@ -435,7 +436,7 @@ class TransactionRecord:
     currency: str = "NC"
     contract_id: str = ""
     reason: str = ""
-    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
 # ──────────────────────────────────────────────────────────────
@@ -466,7 +467,7 @@ class Team:
     members: list[TeamMember] = field(default_factory=list)
     contract_id: str = ""  # The contract this team is fulfilling
     status: str = "forming"  # forming / active / delivering / disbanded
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
 # ──────────────────────────────────────────────────────────────
@@ -495,7 +496,7 @@ class VerificationReport:
     checks: list[CheckResult] = field(default_factory=list)
     verdict: str = ""  # "accepted", "rejected", "partial"
     summary: str = ""
-    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     @property
     def passed_count(self) -> int:

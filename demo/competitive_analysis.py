@@ -13,28 +13,31 @@ This is the canonical demo for the Qwen Cloud Hackathon (Track 3).
 from __future__ import annotations
 
 import asyncio
-import uuid
+import sys
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
 
+# Support both `python demo/competitive_analysis.py` and `python -m demo.competitive_analysis`
+_here = Path(__file__).resolve().parent.parent
+if str(_here) not in sys.path:
+    sys.path.insert(0, str(_here))
+
 from acp.agent import BaseAgent
-from acp.arbitration.arbitrator import ArbitrationEngine, RulingType
+from acp.arbitration.arbitrator import ArbitrationEngine
 from acp.contract.manager import ContractManager
 from acp.negotiation.engine import (
     MarketContext,
     NegotiationEngine,
-    OutcomeType,
 )
 from acp.negotiation.strategies import (
     BATNAStrategy,
     ConcessionStrategy,
-    TitForTatStrategy,
     ValueBasedStrategy,
 )
 from acp.protocol.messaging import reset_message_bus
 from acp.protocol.models import (
-    AgentIdentity,
     ContractTerms,
     PricingModel,
     PricingModelType,
@@ -44,7 +47,6 @@ from acp.registry.registry import ServiceRegistry
 from acp.reputation.ratings import ReputationEngine
 from acp.settlement.ledger import TransactionLedger
 from acp.verification.verifier import DeliveryVerifier
-
 
 # --------------------------------------------------------------
 # Demo State — shared across all agents
@@ -66,7 +68,7 @@ class DemoState:
 
     def log(self, event_type: str, details: str, data: dict[str, Any] | None = None) -> None:
         self.events.append({
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "event": event_type,
             "details": details,
             "data": data or {},
@@ -91,6 +93,22 @@ async def run_demo(verbose: bool = True) -> dict[str, Any]:
     def say(msg: str) -> None:
         if verbose:
             print(msg)
+
+    # ── Qwen Cloud Integration (optional) ──
+    import os
+    qwen_available = bool(os.getenv("QWEN_API_KEY"))
+    if qwen_available:
+        try:
+            from acp.llm.qwen import QwenClient
+            qwen = QwenClient()
+            say("\n[QWEN] Qwen Cloud connected. LLM-powered reasoning enabled.")
+        except Exception:
+            qwen_available = False
+            say("\n[QWEN] API key found but connection failed. Running in simulation mode.")
+    else:
+        say("\n[QWEN] No QWEN_API_KEY set. Running in deterministic simulation mode.")
+        say("[QWEN] Set QWEN_API_KEY to enable LLM-powered agent reasoning.")
+        qwen = None
 
     # ===========================================================
     # SCENE 1: AGENT REGISTRATION
@@ -119,8 +137,7 @@ async def run_demo(verbose: bool = True) -> dict[str, Any]:
     ]
 
     for agent_id, name, svc_type, desc, caps in agents_data:
-        identity = AgentIdentity(agent_id=agent_id, name=name, description=desc)
-        # We don't use full agents for the demo — register services directly
+        # Register services directly (not via full agent instances)
         from acp.protocol.models import ServiceListing
         listing = ServiceListing(
             agent_id=agent_id,
@@ -149,7 +166,7 @@ async def run_demo(verbose: bool = True) -> dict[str, Any]:
         {"quality": 4.8, "timeliness": 4.7, "communication": 4.6, "accuracy": 4.9},
     )
 
-    say(f"\n  Reputation scores initialized:")
+    say("\n  Reputation scores initialized:")
     for aid in ["agent-data-analyst-001", "agent-report-writer-001", "agent-fact-checker-001"]:
         rep = state.reputation.get_score(aid)
         say(f"    {aid}: {rep}/100")
@@ -238,6 +255,27 @@ async def run_demo(verbose: bool = True) -> dict[str, Any]:
         "report_writer_price": rw_price,
         "fact_checker_price": fc_price,
     })
+
+    # ── Qwen LLM integration proof ──
+    if qwen_available and qwen is not None:
+        say("\n  [QWEN] Generating negotiation summary with Qwen3.7-Max...")
+        try:
+            qwen_summary = await qwen.agent_reason(
+                system_prompt=(
+                    "You are an economic analyst. Summarize the negotiation outcomes "
+                    "between an orchestrator agent and three service agents. "
+                    "Keep it to 2-3 sentences."
+                ),
+                user_prompt=(
+                    f"Negotiation results: Data Analyst agreed at {da_price:.2f} NC, "
+                    f"Report Writer agreed at {rw_price:.2f} NC, "
+                    f"Fact Checker agreed at {fc_price:.2f} NC. "
+                    f"These agents will collaborate on a competitive analysis report."
+                ),
+            )
+            say(f"  [QWEN] {qwen_summary.strip()}")
+        except Exception:
+            say("  [QWEN] LLM call failed, continuing with simulation.")
 
     # ===========================================================
     # SCENE 4: CONTRACT SIGNING
@@ -496,7 +534,10 @@ GitHub Copilot remains dominant with 35%.
     case = state.arbitration.file_case(
         contract=c_rw,
         claimant_id="agent-orchestrator-001",
-        claim="Report contains factual errors: incorrect market share data and wrong release date. Delivery does not meet acceptance criteria for accuracy.",
+        claim=(
+            "Report contains factual errors: incorrect market share data "
+            "and wrong release date. Delivery does not meet acceptance criteria."
+        ),
         evidence={
             "fact_check_report": fact_check_result,
             "original_claims_with_errors": [
@@ -564,13 +605,13 @@ GitHub Copilot remains dominant with 35%.
     say("SCENE 7: Settlement & Reputation Summary")
     say("=" * 60)
 
-    say(f"\n  Transaction Ledger:")
+    say("\n  Transaction Ledger:")
     say(f"  {'From':<25} {'To':<25} {'Amount':>8} {'Reason'}")
     say(f"  {'-'*25} {'-'*25} {'-'*8} {'-'*30}")
     for txn in state.ledger.get_history():
         say(f"  {txn['from_agent']:<25} {txn['to_agent']:<25} {txn['amount']:>8.2f} {txn['reason'][:30]}")
 
-    say(f"\n  Reputation Scores:")
+    say("\n  Reputation Scores:")
     for aid in ["agent-data-analyst-001", "agent-report-writer-001", "agent-fact-checker-001"]:
         rep = state.reputation.get_reputation(aid)
         say(f"    {aid}: {rep.composite_score:.1f}/100 "

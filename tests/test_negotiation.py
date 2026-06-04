@@ -3,7 +3,6 @@
 import pytest
 
 from acp.negotiation.engine import NegotiationEngine, OutcomeType
-from acp.protocol.models import MarketContext
 from acp.negotiation.strategies import (
     BATNAStrategy,
     ConcessionStrategy,
@@ -11,7 +10,7 @@ from acp.negotiation.strategies import (
     ValueBasedStrategy,
     create_strategy,
 )
-from acp.protocol.models import ContractTerms
+from acp.protocol.models import ContractTerms, MarketContext
 
 
 class TestMarketContext:

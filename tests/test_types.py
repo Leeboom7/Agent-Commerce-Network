@@ -73,7 +73,7 @@ class TestEconomicRelationshipTypes:
     def test_get_category_unknown_raises(self) -> None:
         try:
             get_category("nonexistent")
-            assert False, "Should have raised ValueError"
+            raise AssertionError("Should have raised ValueError")
         except ValueError:
             pass
 

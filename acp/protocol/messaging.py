@@ -15,7 +15,6 @@ from typing import Any
 
 from acp.protocol.models import AgentMessage, MessageType
 
-
 # ──────────────────────────────────────────────────────────────
 # Message Handler Type
 # ──────────────────────────────────────────────────────────────
@@ -133,7 +132,7 @@ class MessageBus:
                 if (msg.message_type in (MessageType.ACKNOWLEDGMENT, MessageType.ERROR)
                         and message.message_id in msg.references):
                     return msg
-        except asyncio.TimeoutError:
+        except TimeoutError:
             pass
 
         return None
@@ -164,7 +163,7 @@ class MessageBus:
                 event.clear()
                 try:
                     await asyncio.wait_for(event.wait(), timeout=remaining)
-                except asyncio.TimeoutError:
+                except TimeoutError:
                     return None
 
         return None

@@ -1,6 +1,5 @@
 """Tests for the Message Bus."""
 
-import asyncio
 
 import pytest
 

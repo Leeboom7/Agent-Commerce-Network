@@ -1,6 +1,6 @@
 """Tests for reputation system."""
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from acp.protocol.models import Rating
 from acp.reputation.ratings import ReputationEngine
@@ -46,7 +46,7 @@ class TestReputationEngine:
             rater_id="rater-1",
             transaction_id="txn-1",
             scores={"quality": 5.0, "timeliness": 5.0},
-            timestamp=datetime.now(timezone.utc) - timedelta(days=60),
+            timestamp=datetime.now(UTC) - timedelta(days=60),
         )
         # Manually add to record
         rec = e._get_or_create_record("agent-b")

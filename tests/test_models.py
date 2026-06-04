@@ -11,7 +11,6 @@ from acp.protocol.models import (
     PricingModel,
     PricingModelType,
     Rating,
-    ServiceContract,
     ServiceListing,
 )
 

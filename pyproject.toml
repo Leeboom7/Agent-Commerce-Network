@@ -45,10 +45,14 @@ build-backend = "hatchling.build"
 
 [tool.ruff]
 target-version = "py312"
-line-length = 100
+line-length = 110
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP", "B", "SIM"]
+ignore = ["B904"]
+
+[tool.ruff.lint.per-file-ignores]
+"demo/*.py" = ["E402"]  # sys.path fix before acp imports
 
 [tool.mypy]
 python_version = "3.12"
@@ -57,7 +61,6 @@ warn_return_any = true
 warn_unused_configs = true
 
 [tool.pytest.ini_options]
-asyncio_mode = "auto"
 testpaths = ["tests"]
 markers = [
     "asyncio: mark a test as an async test",

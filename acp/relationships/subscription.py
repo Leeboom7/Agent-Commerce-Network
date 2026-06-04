@@ -10,16 +10,14 @@ watches system metrics and alerts on anomalies. Billed monthly.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from acp.contract.manager import ContractManager
 from acp.negotiation.engine import NegotiationEngine
 from acp.negotiation.strategies import BaseNegotiationStrategy, create_strategy
 from acp.protocol.models import (
-    ContractTerms,
     MarketContext,
-    ServiceContract,
 )
 
 
@@ -114,7 +112,7 @@ class SubscriptionRelationship:
             "price_per_period": terms.price,
             "max_periods": max_periods,
             "periods_paid": 0,
-            "started_at": datetime.now(timezone.utc).isoformat(),
+            "started_at": datetime.now(UTC).isoformat(),
         }
 
         # Create contract

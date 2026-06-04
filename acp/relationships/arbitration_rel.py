@@ -16,7 +16,6 @@ from typing import Any
 from acp.arbitration.arbitrator import ArbitrationEngine
 from acp.contract.manager import ContractManager
 from acp.negotiation.engine import NegotiationEngine
-from acp.negotiation.strategies import create_strategy
 from acp.protocol.models import MarketContext, ServiceContract, VerificationReport
 
 
@@ -87,7 +86,7 @@ class ArbitrationRelationship:
         contract_updates = self._enforce_ruling(contract, ruling)
 
         # Create a mini-contract for the arbitration service
-        context = market_context or MarketContext()
+        market_context or MarketContext()
         arb_fee = 10.0  # Fixed arbitration fee in MVP
 
         from acp.protocol.models import ContractTerms

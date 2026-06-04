@@ -16,7 +16,6 @@ from typing import Any
 
 from acp.protocol.models import (
     CheckResult,
-    ContractTerms,
     VerificationReport,
 )
 
@@ -182,7 +181,7 @@ class DeliveryVerifier:
         required_lower = required.lower()
 
         # Try key lookup first (normalize underscores/spaces)
-        normalized_keys = {k.lower().replace("_", " ") for k in delivery.keys()}
+        normalized_keys = {k.lower().replace("_", " ") for k in delivery}
         found_as_key = required_lower in normalized_keys
         found_as_value = required_lower in delivery_str
 
@@ -273,19 +272,18 @@ class DeliveryVerifier:
         """Extract a numeric value for a metric from the delivery."""
         # Search in delivery dictionary
         for key, value in delivery.items():
-            if isinstance(value, (int, float)):
+            if isinstance(value, int | float):
                 if metric_name.lower() in key.lower():
                     return float(value)
             elif isinstance(value, dict):
                 result = self._extract_numeric_value(metric_name, value)
                 if result is not None:
                     return result
-            elif isinstance(value, str):
-                if metric_name.lower() in value.lower():
-                    import re
-                    nums = re.findall(r'[\d.]+', value)
-                    if nums:
-                        return float(nums[0])
+            elif isinstance(value, str) and metric_name.lower() in value.lower():
+                import re
+                nums = re.findall(r'[\d.]+', value)
+                if nums:
+                    return float(nums[0])
 
         # Also search flattened string
         flat = str(delivery)

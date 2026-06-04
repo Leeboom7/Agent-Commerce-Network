@@ -39,11 +39,12 @@ pip install -e ".[demo]"
 # 设置 Qwen API key（可选，Demo 不依赖 LLM）
 export QWEN_API_KEY=your-key-here
 
-# 运行命令行 Demo
-python demo/competitive_analysis.py
+# 运行命令行 Demo（需要先 pip install -e . 或设置 PYTHONPATH）
+python -m demo.competitive_analysis
 
-# 运行 Streamlit 可视化 Demo
-python -m streamlit run demo/app.py
+# 运行 Next.js 可视化 Demo
+cd web && npm install && npm run dev
+# 打开 http://localhost:3000
 ```
 
 ## 18 种经济关系类型
@@ -89,7 +90,8 @@ agent-commerce-network/
 │   ├── team/               # 团队组建与协调
 │   ├── relationships/      # 8种经济关系实现
 │   └── llm/                # Qwen Cloud 集成
-├── demo/                   # Demo 场景 + Streamlit UI
+├── demo/                   # CLI Demo 场景
+├── web/                    # Next.js + React Flow 前端
 ├── tests/                  # 145 个 pytest 测试
 ├── docs/                   # 协议规范、边界划分、Demo 脚本
 └── deploy/                 # 阿里云部署指南
@@ -101,7 +103,7 @@ agent-commerce-network/
 
 - **截止日期**: 2026年7月9日
 - **平台**: [Devpost](https://qwencloud-hackathon.devpost.com/)
-- **技术栈**: Qwen3.7-Max, Qwen3-Coder, 阿里云, Python, Streamlit
+- **技术栈**: Qwen3.7-Max, Qwen3-Coder, 阿里云, Python, Next.js, React Flow
 - **赛道**: Track 3 — Agent Society（多智能体协作系统）
 
 ## 为什么这个项目"不玩具"

@@ -12,8 +12,7 @@ logic, etc.) are injected as composable components.
 
 from __future__ import annotations
 
-import asyncio
-from abc import ABC
+from abc import ABC, abstractmethod
 from typing import Any
 
 from acp.llm.qwen import QwenClient, QwenConfig
@@ -172,6 +171,7 @@ class BaseAgent(ABC):
 
     # ── Lifecycle ──────────────────────────────────────────
 
+    @abstractmethod
     async def execute(self, task: dict[str, Any]) -> dict[str, Any]:
         """
         Execute a task. Override in subclasses.

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useRef } from "react";
 import {
   ReactFlow,
   Background,
@@ -21,8 +21,6 @@ const AGENTS = [
   { id: "agent-factchecker-001", name: "FactChecker-01", type: "fact_checking", rep: 95, txns: 203, status: "online" as const, caps: { languages: ["zh","en"], tools: ["web_search"] } },
   { id: "agent-arbitrator-001", name: "Arbitrator-01", type: "arbitration", rep: 98, txns: 56, status: "online" as const, caps: {} },
 ];
-
-const INITIAL_EDGES: Edge[] = [];
 
 const INITIAL_NODES: Node[] = AGENTS.map((a, i) => {
   const angle = (i / AGENTS.length) * Math.PI * 2 - Math.PI / 2;
@@ -218,16 +216,10 @@ const nodeTypes = { agentNode: AgentNodeComponent };
 
 // ── Floating Card ──
 
-function FloatingCard({ title, type, children, onClose }: { title: string; type: string; children: React.ReactNode; onClose: () => void }) {
-  let bgAccent = "#FFFFFF";
-  if (type === "arbitration") bgAccent = "#FF5E5E";
-  else if (type === "negotiation") bgAccent = "#FFE033";
-  else if (type === "ledger") bgAccent = "#FFFDF7";
-  else if (type === "feed") bgAccent = "#FFFFFF";
-
+function FloatingCard({ title, children, onClose }: { title: string; children: React.ReactNode; onClose: () => void }) {
   return (
     <div className="brutal-card animate-slide-up" style={{
-      position: "absolute", zIndex: 10, minWidth: 260, maxWidth: 320, maxHeight: 400, overflow: "auto",
+      minWidth: 260, maxWidth: 320, maxHeight: 400, overflow: "auto",
     }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10, borderBottom: "3px solid #111111", paddingBottom: 8 }}>
         <span style={{ fontWeight: 700, fontSize: 12, textTransform: "uppercase", letterSpacing: "0.05em" }}>{title}</span>
@@ -246,9 +238,16 @@ export default function Home() {
   const [scene, setScene] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [showCards, setShowCards] = useState<Record<string, boolean>>({});
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const currentScene = SCENES[scene] || SCENES[0];
-  const isLastScene = scene >= Object.keys(SCENES).length - 1;
+
+  const clearTimer = () => {
+    if (intervalRef.current !== null) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
 
   const toggleCard = (id: string) => {
     setShowCards((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -256,15 +255,16 @@ export default function Home() {
 
   const runDemo = useCallback(() => {
     if (isRunning) return;
+    clearTimer();
     setIsRunning(true);
     let s = 1;
     setScene(s);
     setShowCards({ registry: true });
 
-    const interval = setInterval(() => {
+    intervalRef.current = setInterval(() => {
       s += 1;
       if (s > 7) {
-        clearInterval(interval);
+        clearTimer();
         setIsRunning(false);
         return;
       }
@@ -277,13 +277,19 @@ export default function Home() {
   }, [isRunning]);
 
   const resetDemo = () => {
+    clearTimer();
     setScene(0);
     setIsRunning(false);
     setShowCards({});
   };
 
   const togglePause = () => {
-    setIsRunning((prev) => !prev);
+    setIsRunning((prev) => {
+      if (prev) {
+        clearTimer();
+      }
+      return !prev;
+    });
   };
 
   // ── Card positions ──
@@ -389,11 +395,13 @@ export default function Home() {
         {cardSpecs.map((card) => {
           if (!showCards[card.id]) return null;
           return (
-            <FloatingCard key={card.id} title={card.title} type={card.type} onClose={() => toggleCard(card.id)}>
-              {card.content.map((line, i) => (
-                <div key={i} style={{ marginBottom: 4 }}>{line}</div>
-              ))}
-            </FloatingCard>
+            <div key={card.id} style={{ position: "absolute", left: card.position.x, top: card.position.y, zIndex: 10 }}>
+              <FloatingCard title={card.title} onClose={() => toggleCard(card.id)}>
+                {card.content.map((line, i) => (
+                  <div key={i} style={{ marginBottom: 4 }}>{line}</div>
+                ))}
+              </FloatingCard>
+            </div>
           );
         })}
       </div>

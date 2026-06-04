@@ -11,7 +11,7 @@ Flow: Assemble → Coordinate → Deliver → Payout → Disband
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Any
 
@@ -36,7 +36,7 @@ class TaskAssignment:
     dependencies: list[str] = field(default_factory=list)  # task_ids that must complete first
     status: str = "pending"  # pending / in_progress / completed / blocked
     deliverable: Any = None
-    assigned_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    assigned_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     completed_at: str | None = None
 
 
@@ -147,7 +147,7 @@ class TeamManager:
         task = self._get_task(team_id, task_id)
         task.status = "completed"
         task.deliverable = deliverable
-        task.completed_at = datetime.now(timezone.utc).isoformat()
+        task.completed_at = datetime.now(UTC).isoformat()
 
         # Check if all tasks are done
         all_done = all(
@@ -190,9 +190,10 @@ class TeamManager:
 
         ready = []
         for t in tasks:
-            if t.status == "pending":
-                if all(dep in completed_ids for dep in t.dependencies):
-                    ready.append(t)
+            if t.status == "pending" and all(
+                dep in completed_ids for dep in t.dependencies
+            ):
+                ready.append(t)
 
         return ready
 

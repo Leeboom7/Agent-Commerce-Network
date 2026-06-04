@@ -12,7 +12,7 @@ settlement with stablecoin support.
 from __future__ import annotations
 
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 
@@ -90,7 +90,7 @@ class TransactionLedger:
             "currency": "NC",
             "contract_id": contract_id,
             "reason": reason,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "from_balance_after": self._balances[from_agent],
             "to_balance_after": self._balances[to_agent],
         }

@@ -30,7 +30,7 @@ The open-source edition demonstrates the **architecture, protocol design, and ec
 | **Qwen LLM Wrapper** | ✅ Complete | Thin client for Qwen Cloud (Qwen3.7-Max, Qwen3-Coder, Qwen3.6-Plus) |
 | **Base Agent Class** | ✅ Complete | Composable agent base with registry, messaging, LLM access |
 | **Demo Scenario** | ✅ Complete | Competitive analysis report generation with 5 agents |
-| **Demo UI** | ✅ Complete | Streamlit visual dashboard |
+| **Demo UI** | ✅ Complete | Next.js + React Flow canvas with floating cards |
 | **Tests** | ✅ Complete | Unit tests for all core modules |
 | **CI** | ✅ Complete | GitHub Actions: lint, type-check, test |
 | **Documentation** | ✅ Complete | README (EN+CN), protocol spec, architecture diagram, demo video |

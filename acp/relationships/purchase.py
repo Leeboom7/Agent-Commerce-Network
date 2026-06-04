@@ -11,9 +11,8 @@ from __future__ import annotations
 
 from acp.contract.manager import ContractManager
 from acp.negotiation.engine import NegotiationEngine, NegotiationOutcome
-from acp.protocol.models import MarketContext
 from acp.negotiation.strategies import BaseNegotiationStrategy, create_strategy
-from acp.protocol.models import ContractTerms, ServiceContract
+from acp.protocol.models import MarketContext
 
 
 class PurchaseRelationship:

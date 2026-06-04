@@ -10,7 +10,7 @@ Multi-layer reputation for the Agent Commerce Network:
 from __future__ import annotations
 
 import math
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from acp.protocol.models import Rating, ReputationRecord
 
@@ -117,7 +117,7 @@ class ReputationEngine:
             return 100.0  # Neutral starting score
 
         decay = math.log(2) / self.half_life_days
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
 
         weighted_sum = 0.0
         weight_sum = 0.0

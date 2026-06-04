@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from acp.protocol.models import (
@@ -17,7 +17,6 @@ from acp.protocol.models import (
     ContractTerms,
     ServiceContract,
 )
-
 
 # ──────────────────────────────────────────────────────────────
 # Contract Event Log
@@ -33,7 +32,7 @@ class ContractEvent:
     event_type: str = ""  # "created", "signed", "delivered", "accepted", etc.
     actor_id: str = ""  # Which agent triggered this event
     details: dict[str, Any] = field(default_factory=dict)
-    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
 # ──────────────────────────────────────────────────────────────
@@ -153,7 +152,7 @@ class ContractManager:
         contract.delivery_attempts.append({
             "attempt": len(contract.delivery_attempts) + 1,
             "delivery": delivery,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         })
         contract.status = ContractStatus.DELIVERED
         self._record_event(contract_id, "delivered", seller_id, {"delivery": delivery})
@@ -168,7 +167,7 @@ class ContractManager:
             raise ValueError(f"Only the buyer ({contract.buyer_id}) can accept")
 
         contract.status = ContractStatus.ACCEPTED
-        contract.fulfilled_at = datetime.now(timezone.utc)
+        contract.fulfilled_at = datetime.now(UTC)
         self._record_event(contract_id, "accepted", buyer_id)
         return contract
 
@@ -209,7 +208,7 @@ class ContractManager:
         self._validate_transition(contract, ContractStatus.RESOLVED)
 
         contract.status = ContractStatus.RESOLVED
-        contract.fulfilled_at = datetime.now(timezone.utc)
+        contract.fulfilled_at = datetime.now(UTC)
         self._record_event(
             contract_id, "resolved", resolver_id, {"resolution": resolution}
         )

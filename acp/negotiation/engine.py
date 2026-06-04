@@ -9,11 +9,11 @@ and automatic escalation.
 from __future__ import annotations
 
 import uuid
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from dataclasses import dataclass
+from datetime import UTC, datetime
 from enum import Enum
-from typing import Any
 
+from acp.negotiation.strategies import BaseNegotiationStrategy
 from acp.protocol.models import (
     ContractTerms,
     MarketContext,
@@ -21,8 +21,6 @@ from acp.protocol.models import (
     NegotiationSession,
     NegotiationStatus,
 )
-from acp.negotiation.strategies import BaseNegotiationStrategy
-
 
 # ──────────────────────────────────────────────────────────────
 # Negotiation Outcome
@@ -159,7 +157,7 @@ class NegotiationEngine:
                 buyer_round.counter_offer = current_offer  # Accepted as-is or with minor mods
                 session.rounds.append(buyer_round)
                 session.status = NegotiationStatus.AGREED
-                session.resolved_at = datetime.now(timezone.utc)
+                session.resolved_at = datetime.now(UTC)
 
                 final_terms = seller_decision.get("accepted_terms", current_offer)
                 return NegotiationOutcome(
@@ -192,7 +190,7 @@ class NegotiationEngine:
                         rationale="Buyer accepts the seller's counter-offer.",
                     ))
                     session.status = NegotiationStatus.AGREED
-                    session.resolved_at = datetime.now(timezone.utc)
+                    session.resolved_at = datetime.now(UTC)
 
                     return NegotiationOutcome(
                         outcome_type=OutcomeType.AGREEMENT,

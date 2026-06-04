@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ACP Frontend — Agent Commerce Network
 
-## Getting Started
+Neo-Brutalist Next.js frontend for the Agent Commerce Protocol.
+Force-directed graph visualization of the autonomous agent economy.
 
-First, run the development server:
+## Quick Start
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Open http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Next.js 16 + TypeScript
+- Tailwind CSS 4 (neo-brutalist theme)
+- React Flow (@xyflow/react) — graph canvas
+- Space Grotesk + JetBrains Mono fonts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Architecture
 
-## Learn More
+Single-page canvas app:
+- **TopBar** — network status, demo controls [RUN|PAUSE|RESET]
+- **Canvas** — React Flow with AgentNode (circle) + ContractEdge (line)
+- **Floating Cards** — positioned overlay cards (registry, feed, negotiation, contract, arbitration, ledger, reputation)
+- **BottomDock** — protocol version + hackathon info
+- **7-scene Demo** — auto-advancing timeline through the full agent commerce lifecycle
 
-To learn more about Next.js, take a look at the following resources:
+## Build
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run build
+npm start
+```

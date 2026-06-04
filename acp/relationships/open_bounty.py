@@ -12,7 +12,7 @@ Three developer agents submit proposals. Orchestrator picks the winner.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 
@@ -27,7 +27,7 @@ class BountyProposal:
     description: str
     estimated_duration: str = ""
     bidder_reputation: float = 100.0
-    submitted_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    submitted_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
 
 class OpenBountyRelationship:
@@ -72,7 +72,7 @@ class OpenBountyRelationship:
         import uuid
 
         bounty_id = f"bounty-{uuid.uuid4().hex[:12]}"
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
 
         self._bounties[bounty_id] = {
             "bounty_id": bounty_id,
@@ -85,7 +85,7 @@ class OpenBountyRelationship:
             "status": "open",
             "created_at": now.isoformat(),
             "submission_deadline": datetime.fromtimestamp(
-                now.timestamp() + submission_window_hours * 3600, tz=timezone.utc
+                now.timestamp() + submission_window_hours * 3600, tz=UTC
             ).isoformat(),
             "winner_id": None,
             "winning_proposal_id": None,
@@ -115,7 +115,7 @@ class OpenBountyRelationship:
 
         # Check submission deadline
         deadline = datetime.fromisoformat(bounty["submission_deadline"])
-        if datetime.now(timezone.utc) > deadline:
+        if datetime.now(UTC) > deadline:
             bounty["status"] = "evaluating"
             return {"success": False, "details": "Submission window has closed"}
 

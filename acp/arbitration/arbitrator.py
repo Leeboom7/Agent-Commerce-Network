@@ -14,12 +14,11 @@ the reputation and settlement systems.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Any
 
 from acp.protocol.models import ServiceContract, VerificationReport
-
 
 # ──────────────────────────────────────────────────────────────
 # Arbitration Types
@@ -58,7 +57,7 @@ class ArbitrationRuling:
     remedy: dict[str, Any]  # What should happen: refund, penalty, etc.
     arbitrator_id: str
     timestamp: str = field(
-        default_factory=lambda: datetime.now(timezone.utc).isoformat()
+        default_factory=lambda: datetime.now(UTC).isoformat()
     )
 
 
@@ -216,8 +215,8 @@ class ArbitrationEngine:
                 # All passed — buyer's claim has no merit
                 return (
                     RulingType.SELLER_UPHELD,
-                    f"Verification report shows all criteria passed. "
-                    f"Buyer's claim is contradicted by evidence.",
+                    "Verification report shows all criteria passed. "
+                    "Buyer's claim is contradicted by evidence.",
                     self.REMEDIES["no_refund"],
                 )
 

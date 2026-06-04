@@ -10,11 +10,9 @@ transaction type).
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from copy import deepcopy
 from typing import Any
 
 from acp.protocol.models import ContractTerms, MarketContext
-
 
 # ──────────────────────────────────────────────────────────────
 # Base Strategy Interface
@@ -149,9 +147,8 @@ class TitForTatStrategy(BaseNegotiationStrategy):
         else:
             # Counterparty stalled — hold firm
             remaining = self.max_rounds - round_num
-            if remaining <= 1:
+            if remaining <= 1 and offer.price >= self.reservation_price:
                 # Last round — accept if above reservation
-                if offer.price >= self.reservation_price:
                     return {
                         "action": "accept",
                         "accepted_terms": offer,

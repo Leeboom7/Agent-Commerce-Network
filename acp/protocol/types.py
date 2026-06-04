@@ -10,7 +10,6 @@ support at minimum the types marked as CORE.
 
 from enum import Enum
 
-
 # ──────────────────────────────────────────────────────────────
 # Category A: Discrete Transactions (一次性交易)
 # ──────────────────────────────────────────────────────────────

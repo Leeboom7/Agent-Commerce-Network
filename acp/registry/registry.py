@@ -9,8 +9,8 @@ discover services offered by other agents. The registry is the
 from __future__ import annotations
 
 from collections import defaultdict
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from dataclasses import dataclass
+from datetime import UTC, datetime
 from typing import Any
 
 
@@ -65,7 +65,7 @@ class ServiceRegistry:
         for tag in listing.tags:
             self._by_tag[tag.lower()].add(lid)
 
-        listing.updated_at = datetime.now(timezone.utc)
+        listing.updated_at = datetime.now(UTC)
         return lid
 
     def unregister(self, listing_id: str) -> bool:

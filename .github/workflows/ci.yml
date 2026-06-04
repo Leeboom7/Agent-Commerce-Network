@@ -28,11 +28,45 @@ jobs:
         run: |
           uv pip install --system -e ".[dev]"
 
-      - name: Lint with ruff
-        run: ruff check acp/ tests/
+      - name: Install project
+        run: uv pip install --system -e .
+
+      - name: Lint with ruff (acp + tests + demo)
+        run: ruff check acp/ tests/ demo/
 
       - name: Type check with mypy
         run: mypy acp/ --ignore-missing-imports
 
       - name: Run tests
         run: pytest tests/ -v --tb=short
+
+      - name: Verify demo runs (CLI)
+        run: python -m demo.competitive_analysis
+
+      - name: Verify baseline benchmark
+        run: python -m demo.single_agent_baseline
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build

@@ -87,7 +87,7 @@ class TestDeliveryVerifier:
 
     def test_threshold_check_fail(self) -> None:
         v = self.verifier
-        report = v.verify(
+        v.verify(
             "c-1", "v-1",
             delivery={"data_points": 50, "count": 50},
             criteria=["Must have at least 100 data points"],

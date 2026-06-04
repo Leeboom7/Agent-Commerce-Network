@@ -17,11 +17,10 @@ from pathlib import Path
 # Ensure acp is importable
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-import streamlit as st
 import pandas as pd
+import streamlit as st
 
 from demo.competitive_analysis import run_demo
-
 
 st.set_page_config(
     page_title="Agent Commerce Network Demo",

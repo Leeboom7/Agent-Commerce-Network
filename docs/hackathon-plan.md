@@ -10,7 +10,7 @@
 
 ## Architecture
 
-See `docs/architecture.png` for the visual diagram.
+See `docs/architecture.svg` for the visual architecture diagram.
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -35,7 +35,7 @@ See `docs/architecture.png` for the visual diagram.
 | Async | asyncio |
 | Database | SQLite (MVP) → PostgreSQL (later) |
 | API | FastAPI |
-| Demo UI | Streamlit |
+| Demo UI | Next.js + React Flow |
 | Testing | pytest + pytest-asyncio |
 | CI | GitHub Actions |
 | License | MIT |
@@ -73,7 +73,7 @@ See `docs/architecture.png` for the visual diagram.
 - [ ] Arbitration Agent: automated dispute resolution
 - [ ] Team Formation: assemble, coordinate, disband, payout
 - [ ] Demo scenario: Competitive Analysis Report orchestration
-- [ ] Streamlit UI: live registry, negotiation feed, contracts, report
+- [ ] Next.js UI: React Flow graph + floating cards + 7-scene demo
 - [ ] Draft demo video recording
 
 ### Week 5 (July 2–8): Polish & Submit

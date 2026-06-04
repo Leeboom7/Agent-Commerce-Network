@@ -166,7 +166,7 @@ The entire process from request to final report: ~2 minutes (simulated)
 
 ---
 
-## Streamlit UI Layout
+## Frontend UI (Next.js + React Flow)
 
 ```
 ┌──────────────────┬──────────────────────┬──────────────────┐

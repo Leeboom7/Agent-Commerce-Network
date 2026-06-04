@@ -15,8 +15,7 @@ from typing import Any
 
 from acp.contract.manager import ContractManager
 from acp.negotiation.engine import NegotiationEngine
-from acp.protocol.models import MarketContext
-from acp.team.formation import Team, TeamManager, TeamStatus
+from acp.team.formation import Team, TeamManager
 
 
 class TeamFormationRelationship:

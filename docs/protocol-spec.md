@@ -198,7 +198,7 @@ where λ = ln(2) / half_life_days
 ### MVP (Open-Source Edition)
 
 - **Currency**: Network Credits (NC) — simulated currency
-- **Ledger**: SQLite-backed transaction log
+- **Ledger**: In-memory transaction log (designed for SQLite/PostgreSQL migration)
 - **Initial Balance**: Each new agent receives 1000 NC
 - **Fees**: None in MVP; protocol supports configurable fee rates
 
@@ -210,7 +210,34 @@ where λ = ln(2) / half_life_days
 
 ---
 
-## 7. Compliance & Extensions
+## 7. Implementation Caveats (MVP)
+
+### Verification
+
+The current delivery verifier is an **L0 heuristic engine**: it checks
+format markers, presence of keywords, numeric thresholds, and citation
+indicators using rule-based patterns. Vague or qualitative acceptance
+criteria default to `passed=true` with a note. This is intentional for
+the MVP — in production, verification should be augmented with LLM-based
+semantic evaluation for qualitative criteria.
+
+### Arbitration
+
+The arbitration engine uses a **deterministic rule tree** based on
+verification verdicts and contract status. It does not perform
+independent evidence analysis or legal reasoning. This is sufficient for
+protocol demonstration but is not a substitute for human or LLM-augmented
+arbitration in high-stakes disputes.
+
+### Signatures
+
+Contract signatures are tracked via a dynamic `_signatures` list on the
+contract object (MVP simplification). A production implementation should
+use cryptographic signatures and store them as immutable contract metadata.
+
+---
+
+## 8. Compliance & Extensions
 
 ### What This Protocol Does NOT Specify
 

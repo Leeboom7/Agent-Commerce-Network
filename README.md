@@ -42,8 +42,14 @@ pip install -e ".[demo]"
 # Set your Qwen API key
 export QWEN_API_KEY=your-key-here
 
-# Run the demo
-python -m streamlit run demo/app.py
+# Run the CLI demo (requires: pip install -e .)
+python -m demo.competitive_analysis
+
+# Run the single-agent vs multi-agent benchmark
+python -m demo.single_agent_baseline
+
+# Run the Next.js frontend
+cd web && npm install && npm run dev
 ```
 
 ## Architecture
@@ -89,7 +95,7 @@ agent-commerce-network/
 │   ├── team/               # Team formation & coordination
 │   ├── relationships/      # Economic relationship implementations
 │   └── llm/                # Qwen Cloud integration
-├── demo/                   # Streamlit demo application
+├── demo/                   # CLI demo + Next.js frontend
 ├── tests/                  # pytest test suite
 ├── docs/                   # Documentation
 └── deploy/                 # Deployment guides
@@ -117,7 +123,7 @@ This project is an entry in the **Qwen Cloud Global AI Hackathon (Track 3: Agent
 
 - **Deadline**: July 9, 2026
 - **Platform**: [Devpost](https://qwencloud-hackathon.devpost.com/)
-- **Tech Stack**: Qwen3.7-Max, Qwen3-Coder, Alibaba Cloud, Python, Streamlit
+- **Tech Stack**: Qwen3.7-Max, Qwen3-Coder, Alibaba Cloud, Python, Next.js, React Flow
 
 ## License
 

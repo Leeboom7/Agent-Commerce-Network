@@ -125,7 +125,7 @@ class TestContractManager:
 
     def test_list_contracts(self, mgr: ContractManager, terms: ContractTerms) -> None:
         c1 = mgr.create_contract("buyer-1", "seller-1", "purchase", terms)
-        c2 = mgr.create_contract("buyer-2", "seller-1", "commission", terms)
+        mgr.create_contract("buyer-2", "seller-1", "commission", terms)
 
         all_c = mgr.list_contracts()
         assert len(all_c) == 2

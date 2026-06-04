@@ -1,0 +1,155 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-bg: #FFFDF7;
+  --color-surface: #FFFFFF;
+  --color-text: #111111;
+  --color-text-secondary: #555555;
+  --color-accent: #FFE033;
+  --color-danger: #FF5E5E;
+  --color-success: #22C55E;
+  --color-info: #7C3AED;
+  --color-border: #111111;
+  --font-heading: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #FFFDF7;
+  color: #111111;
+  font-family: "Space Grotesk", sans-serif;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* Neo-Brutalist base styles */
+.brutal-border {
+  border: 3px solid #111111;
+}
+
+.brutal-shadow {
+  box-shadow: 5px 5px 0 #111111;
+}
+
+.brutal-shadow-sm {
+  box-shadow: 3px 3px 0 #111111;
+}
+
+.brutal-card {
+  border: 3px solid #111111;
+  background: #FFFFFF;
+  box-shadow: 5px 5px 0 #111111;
+  padding: 16px;
+}
+
+/* Status pills */
+.pill-ok {
+  border: 2px solid #111111;
+  background: #22C55E;
+  color: #111111;
+  padding: 4px 12px;
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.pill-fail {
+  border: 2px solid #111111;
+  background: #FF5E5E;
+  color: #111111;
+  padding: 4px 12px;
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.pill-idle {
+  border: 2px solid #111111;
+  background: #F5F5F5;
+  color: #333333;
+  padding: 4px 12px;
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+/* Button styles */
+.brutal-btn {
+  border: 3px solid #111111;
+  background: #FFE033;
+  color: #111111;
+  padding: 8px 20px;
+  font-weight: 700;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 13px;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 #111111;
+  transition: all 0.1s ease;
+}
+
+.brutal-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 6px 6px 0 #111111;
+}
+
+.brutal-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #111111;
+}
+
+.brutal-btn-danger {
+  background: #FF5E5E;
+}
+
+.brutal-btn-dark {
+  background: #111111;
+  color: #FFFDF7;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F5F5F5;
+  border: 1px solid #111111;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #FFE033;
+  border: 1px solid #111111;
+}
+
+/* Animation keyframes */
+@keyframes pulse-border {
+  0%, 100% { border-color: #111111; }
+  50% { border-color: #FF5E5E; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes credit-flow {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: 20; }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-pulse-border {
+  animation: pulse-border 1s ease-in-out infinite;
+}

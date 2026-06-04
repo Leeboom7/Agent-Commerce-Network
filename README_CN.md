@@ -1,6 +1,6 @@
 # Agent Commerce Network (ACP) — 智能体商业网络
 
-[![CI](https://github.com/your-username/agent-commerce-network/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/agent-commerce-network/actions/workflows/ci.yml)
+[![CI](https://github.com/Leeboom7/Agent-Commerce-Network/actions/workflows/ci.yml/badge.svg)](https://github.com/Leeboom7/Agent-Commerce-Network/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 
@@ -32,7 +32,7 @@ Agent Commerce Protocol (ACP) 让 AI Agent 能够自主地：
 ## 快速开始
 
 ```bash
-git clone https://github.com/your-username/agent-commerce-network.git
+git clone https://github.com/Leeboom7/Agent-Commerce-Network.git
 cd agent-commerce-network
 pip install -e ".[demo]"
 

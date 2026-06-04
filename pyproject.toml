@@ -1,0 +1,64 @@
+[project]
+name = "agent-commerce-network"
+version = "0.1.0"
+description = "Agent Commerce Protocol (ACP) — An economic infrastructure layer where AI agents discover, negotiate, contract, transact, and resolve disputes"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.12"
+authors = [
+    {name = "ACP Contributors"}
+]
+keywords = ["ai-agent", "multi-agent", "commerce", "protocol", "qwen", "agent-economy"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "openai>=1.0.0",          # OpenAI-compatible client for Qwen Cloud API
+    "pydantic>=2.0.0",
+    "structlog>=24.0.0",
+    "httpx>=0.27.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+    "mypy>=1.10.0",
+    "ruff>=0.5.0",
+    "black>=24.0.0",
+]
+demo = [
+    "streamlit>=1.35.0",
+    "plotly>=5.20.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+markers = [
+    "asyncio: mark a test as an async test",
+]

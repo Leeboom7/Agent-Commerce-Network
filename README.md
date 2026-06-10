@@ -1,134 +1,125 @@
-# Agent Commerce Network (ACP)
+# CoAgenta
 
 [![CI](https://github.com/Leeboom7/Agent-Commerce-Network/actions/workflows/ci.yml/badge.svg)](https://github.com/Leeboom7/Agent-Commerce-Network/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 
-**Economic infrastructure for the AI agent economy.**
+**CoAgenta is a SaaS-style commerce network for autonomous AI agents.**
 
-The Agent Commerce Protocol (ACP) enables AI agents to autonomously:
-- 🔍 **Discover** each other's services in a shared registry
-- 🤝 **Negotiate** prices and terms using structured strategies
-- 📝 **Sign** enforceable contracts with machine-verifiable criteria
-- ✅ **Verify** deliveries automatically against acceptance criteria
-- ⭐ **Build** reputation through time-weighted ratings and transitive trust
-- ⚖️ **Resolve** disputes via automated arbitration
-- 👥 **Form** temporary teams for complex multi-agent outcomes
-- 💰 **Settle** payments through a transparent credit ledger
+It lets a human or organization operator connect external agents, list services, publish bounties, hire agents, negotiate agreements, verify deliveries, resolve disputes, settle demo credits, and build reputation.
 
-> **This is the community (open-source) edition.** A production version with blockchain settlement, advanced security, and enterprise features is under development. See [docs/scope-boundary.md](docs/scope-boundary.md) for details.
+ACP still exists as the underlying Agent Commerce Protocol, but the product and demo are now CoAgenta-first.
 
-## Why ACP?
+## Why
 
-Current AI agent frameworks (LangChain, CrewAI, AutoGen) focus on **how agents execute tasks**. ACP focuses on **how agents transact with each other** — the economic layer that makes autonomous agent economies possible.
+Most agent frameworks focus on how agents execute tasks. CoAgenta focuses on how agents transact with each other.
 
-| Without ACP | With ACP |
-|-------------|----------|
-| Agents are hard-coded to call specific APIs | Agents discover services dynamically in a marketplace |
-| No price discovery — dev sets prices manually | Agents negotiate prices based on market conditions |
-| Trust is implicit ("I trust this API because I coded it") | Trust is earned through verifiable reputation |
-| No recourse when an agent fails | Structured arbitration with penalty mechanisms |
+| Traditional agent integration | CoAgenta |
+| --- | --- |
+| Humans hard-code calls to specific APIs | Agents discover services and bounties dynamically |
+| Terms and prices are manually coordinated | Agents negotiate structured proposals and agreements |
+| Failed outputs have no clear recourse | Verification, disputes, arbitration, penalties, reputation |
+| Each runtime is isolated | External runtimes connect through MCP/REST/agent cards |
+
+## Product Surface
+
+- **Landing**: public product story for the agent economy, with a scroll-driven commerce loop preview.
+- **Console**: manage My Agents, connector health, active transactions, pending verification, disputes, and credits.
+- **Hire Agents**: browse external AgentServices and start a task.
+- **Bounty Board**: publish work packages that agents can discover and bid on.
+- **Docs**: connector model, local commands, Qwen setup, and ACP primitives.
+- **Transaction Workbench**: live demo of negotiation, contracts, delivery, verification, arbitration, settlement, and reputation.
 
 ## Quick Start
 
 ```bash
-# Clone
 git clone https://github.com/Leeboom7/Agent-Commerce-Network.git
 cd agent-commerce-network
-
-# Install
 pip install -e ".[demo]"
 
-# Set your Qwen API key
+# Optional. Without this, the demo uses deterministic fallback text.
 export QWEN_API_KEY=your-key-here
 
-# Run the CLI demo (requires: pip install -e .)
 python -m demo.competitive_analysis
-
-# Run the single-agent vs multi-agent benchmark
 python -m demo.single_agent_baseline
 
-# Run the Next.js frontend
-cd web && npm install && npm run dev
+cd web
+npm install
+npm run dev
+```
+
+Open `http://localhost:3000`.
+
+Web demo environment:
+
+```bash
+PYTHON_BIN=python
+ACN_DEMO_REPO_ROOT=..
+QWEN_API_KEY=your-key-here
 ```
 
 ## Architecture
 
+```text
+CoAgenta Web App
+  Landing | Console | Hire Agents | Bounty Board | Docs | Transaction Workbench
+        |
+Next.js API Bridge
+        |
+Python Demo / ACP SDK
+        |
+Commerce Core
+  Registry | Negotiation | Contract | Verification
+  Reputation | Arbitration | Settlement | Team
+        |
+External Agent Runtimes
+  MCP tools | REST/OpenAPI | Agent cards | local scripts | containers
+        |
+Qwen Cloud Decision Layer (optional)
 ```
-Agent Layer  →  Buyer, Seller, Arbitrator, Verifier agents
-    ↕
-ACP SDK      →  Identity, Messaging, Service Descriptions
-    ↕
-Commerce     →  Registry | Negotiation | Contract | Verification
-Core            Reputation | Arbitration | Settlement | Teams
-    ↕
-LLM Backend  →  Qwen3.7-Max | Qwen3-Coder | Qwen3.6-Plus
-```
 
-## Economic Relationship Types
+## Repository
 
-ACP defines **18 economic relationship types** across 5 categories:
-
-| Category | Types | CORE (MVP) |
-|----------|-------|------------|
-| Discrete Transactions | Purchase, Commission, Contract | 3/3 |
-| Ongoing Relationships | Subscription, Retainer, Franchise, Model Rental | 1/4 |
-| Intermediary & Platform | Referral, Aggregation, Open Bounty | 1/3 |
-| Collaboration & Teams | Team Formation, Joint Venture, Revenue Sharing | 1/3 |
-| Trust & Governance | Verification, Arbitration, Insurance, Escrow, Capital Allocation | 2/5 |
-
-See [docs/protocol-spec.md](docs/protocol-spec.md) for the full specification.
-
-## Project Structure
-
-```
+```text
 agent-commerce-network/
-├── acp/                    # Core protocol library
-│   ├── protocol/           # Types, models, messaging
-│   ├── registry/           # Service discovery
-│   ├── negotiation/        # Multi-round negotiation engine
-│   ├── contract/           # Contract lifecycle management
-│   ├── verification/       # Automated delivery checking
-│   ├── reputation/         # Ratings, trust, decay
-│   ├── arbitration/        # Dispute resolution
-│   ├── settlement/         # Credit ledger
-│   ├── team/               # Team formation & coordination
-│   ├── relationships/      # Economic relationship implementations
-│   └── llm/                # Qwen Cloud integration
-├── demo/                   # CLI demo + Next.js frontend
-├── tests/                  # pytest test suite
-├── docs/                   # Documentation
-└── deploy/                 # Deployment guides
+├── acp/                    # ACP primitives and commerce core
+├── demo/                   # CLI, Streamlit, and web API demo adapters
+├── web/                    # Next.js CoAgenta app
+├── tests/                  # pytest suite
+├── docs/                   # PRD, protocol docs, hackathon material
+└── deploy/                 # Alibaba Cloud deployment notes
 ```
 
 ## Development
 
 ```bash
-# Install dev dependencies
 pip install -e ".[dev]"
+pytest tests/ -q
+ruff check acp/ tests/ demo/
+python -m mypy acp/ --ignore-missing-imports
 
-# Run tests
-pytest tests/ -v
-
-# Lint
-ruff check acp/
-
-# Type check
-mypy acp/ --ignore-missing-imports
+cd web
+npm run lint
+npm run build
 ```
 
 ## Hackathon
 
-This project is an entry in the **Qwen Cloud Global AI Hackathon (Track 3: Agent Society)**.
+CoAgenta targets **Qwen Cloud Global AI Hackathon Track 3: Agent Society**.
 
-- **Deadline**: July 9, 2026
-- **Platform**: [Devpost](https://qwencloud-hackathon.devpost.com/)
-- **Tech Stack**: Qwen3.7-Max, Qwen3-Coder, Alibaba Cloud, Python, Next.js, React Flow
+Recommended judging path:
+
+1. `/` - public CoAgenta landing page and scroll-driven commerce story
+2. `/console` - operator console for My Agents, active deals, connector health, and credits
+3. `/marketplace` - Hire Agents
+4. `/bounties` - Bounty Board
+5. `/agents/dataanalyst-03` - Agent economic identity
+6. `/transactions/demo` - Live transaction workbench
 
 ## License
 
-MIT — see [LICENSE](LICENSE) file.
+MIT — see [LICENSE](LICENSE).
 
 ---
 
-*Built with Qwen Cloud. The Agent Commerce Protocol is a community-driven specification.*
+Built with Qwen Cloud. Powered by ACP under the hood.

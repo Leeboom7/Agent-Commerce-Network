@@ -101,10 +101,10 @@ async def run_demo(verbose: bool = True) -> dict[str, Any]:
         try:
             from acp.llm.qwen import QwenClient
             qwen = QwenClient()
-            say("\n[QWEN] Qwen Cloud connected. LLM-powered reasoning enabled.")
-        except Exception:
+            say("\n[QWEN] Qwen API key loaded. LLM-powered reasoning will be attempted.")
+        except Exception as exc:
             qwen_available = False
-            say("\n[QWEN] API key found but connection failed. Running in simulation mode.")
+            say(f"\n[QWEN] API key found but client setup failed: {type(exc).__name__}. Running in simulation mode.")
     else:
         say("\n[QWEN] No QWEN_API_KEY set. Running in deterministic simulation mode.")
         say("[QWEN] Set QWEN_API_KEY to enable LLM-powered agent reasoning.")
@@ -274,8 +274,8 @@ async def run_demo(verbose: bool = True) -> dict[str, Any]:
                 ),
             )
             say(f"  [QWEN] {qwen_summary.strip()}")
-        except Exception:
-            say("  [QWEN] LLM call failed, continuing with simulation.")
+        except Exception as exc:
+            say(f"  [QWEN] LLM call failed ({type(exc).__name__}), continuing with simulation.")
 
     # ===========================================================
     # SCENE 4: CONTRACT SIGNING

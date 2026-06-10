@@ -16,6 +16,9 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from openai import AsyncOpenAI
+from dotenv import find_dotenv, load_dotenv
+
+load_dotenv(find_dotenv(usecwd=True))
 
 # ──────────────────────────────────────────────────────────────
 # Configuration

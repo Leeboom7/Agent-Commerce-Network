@@ -1,103 +1,156 @@
-# Agent Commerce Network — Hackathon Development Plan
+# CoAgenta Hackathon Plan
 
 ## Context
 
-- **Hackathon**: Qwen Cloud Global AI Hackathon (Track 3: Agent Society)
+- **Hackathon**: Qwen Cloud Global AI Hackathon
+- **Track**: Track 3, Agent Society
 - **Deadline**: July 9, 2026
-- **Duration**: 5 weeks (June 4 – July 8)
-- **Prize Pool**: $70,000+ ($7,000 per track winner)
-- **Requirements**: Use Qwen Cloud models, open-source code, Alibaba Cloud deployment
+- **Primary goal**: Win the hackathon
+- **Secondary goal**: Build GitHub open-source influence
 
-## Architecture
+The project is now positioned as **CoAgenta**, a SaaS-style Agent commerce console. ACP remains the underlying protocol layer, but the demo should not feel like a protocol spec viewer.
 
-See `docs/architecture.svg` for the visual architecture diagram.
+## Winning Narrative
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                  Agent Commerce Network (ACP)             │
-│                                                          │
-│  Agent Layer: Buyer | Seller | Arbitrator | Verifier     │
-│  SDK/Protocol: Identity, Messaging, Service Description  │
-│  Commerce Core: Registry | Negotiation | Contract |      │
-│                Verification | Reputation | Arbitration   │
-│                Settlement | Team Formation                │
-│  LLM Backend: Qwen3.7-Max | Qwen3-Coder | Qwen3.6-Plus  │
-└─────────────────────────────────────────────────────────┘
+Most Agent demos show agents as tools that answer humans. CoAgenta shows agents as economic participants:
+
+```text
+external agents connect -> list services -> discover work -> negotiate
+-> sign agreements -> deliver artifacts -> get verified
+-> resolve disputes -> settle credits -> update reputation
 ```
 
-## Technology Stack
+The hackathon story must make three points quickly:
+
+1. **Agent society needs economic infrastructure**, not only multi-agent chat.
+2. **CoAgenta is the operator console** for that network.
+3. **ACP powers the transaction mechanics** under the product.
+
+## Product Architecture
+
+```text
+CoAgenta Web App
+  Landing | Console | Hire Agents | Bounty Board | Docs | Transaction Workbench
+        |
+Next.js API Bridge
+        |
+Python Demo / ACP SDK
+        |
+Commerce Core
+  Registry | Negotiation | Contract | Verification
+  Reputation | Arbitration | Settlement | Team
+        |
+External Agent Runtimes
+  MCP tools | REST/OpenAPI | Agent cards | local scripts | containers
+        |
+Qwen Cloud Decision Layer
+```
+
+## Demo Path
+
+Use this sequence for judging and video:
+
+1. `/` - Landing page explains the product, marketplace, bounty board, and scroll-driven commerce loop.
+2. `/console` - Console shows My Agents, active deals, connector health, recent protocol events.
+3. `/marketplace` - Hire Agents shows discoverable external AgentServices.
+4. `/bounties` - Bounty Board shows work packages agents can bid on.
+5. `/agents/dataanalyst-03` - Agent economic identity page.
+6. `/transactions/demo` - Run the live transaction workbench.
+
+The transaction demo must show:
+
+- Qwen planner/rationale layer, with fallback when `QWEN_API_KEY` is missing.
+- AgentService discovery.
+- Multi-round negotiation.
+- Contract signing.
+- Artifact delivery.
+- Verification failure.
+- Dispute and arbitration.
+- NC credit settlement.
+- Reputation update.
+- Baseline comparison.
+
+## Technical Stack
 
 | Layer | Technology |
-|-------|-----------|
-| Language | Python 3.12+ |
-| LLM | Qwen Cloud (Qwen3.7-Max, Qwen3-Coder, Qwen3.6-Plus) |
-| Agent Framework | Custom lightweight (no LangChain) |
-| Async | asyncio |
-| Database | SQLite (MVP) → PostgreSQL (later) |
-| API | FastAPI |
-| Demo UI | Next.js + React Flow |
-| Testing | pytest + pytest-asyncio |
-| CI | GitHub Actions |
-| License | MIT |
+| --- | --- |
+| Product UI | Next.js 16.2.7, React 19.2.4, TypeScript 5, Tailwind CSS 4 |
+| Protocol/demo | Python 3.12+ |
+| LLM | Qwen Cloud via OpenAI-compatible client, optional fallback |
+| Agent runtime model | External runtimes via connectors, not platform-hosted execution |
+| API bridge | Next.js route spawning `python -m demo.web_api` |
+| Tests | pytest, ruff, mypy where installed, ESLint, Next build |
+| Deployment target | Alibaba Cloud / Next.js compatible runtime |
 
-## Five-Week Schedule
+## Current MVP Scope
 
-### Week 1 (June 4–10): Foundation
-- [x] Project scaffold, pyproject.toml, directory structure
-- [x] 18 economic relationship types (protocol/types.py)
-- [x] Shared data models (protocol/models.py)
-- [x] Message bus (protocol/messaging.py)
-- [x] Service Registry (registry/registry.py)
-- [x] Qwen Cloud LLM wrapper (llm/qwen.py)
-- [x] Base Agent class (agent.py)
-- [x] Unit tests for all above
-- [x] CI configuration (GitHub Actions)
-- [x] Deliverable documents
+Implemented or in demo scope:
 
-### Week 2 (June 11–17): Negotiation + Contract
-- [ ] Negotiation engine: multi-round with deadlock detection
-- [ ] Negotiation strategies: tit-for-tat, concession, BATNA, value-based
-- [ ] Contract Manager: create, sign, lifecycle tracking
-- [ ] Integration: Negotiation → Contract (agreed deal → signed contract)
-- [ ] Relationship types: Purchase + Commission + Contract
-- [ ] Tests for negotiation and contract pipeline
+- In-memory ServiceRegistry.
+- Negotiation engine and strategy classes.
+- Contract manager and lifecycle states.
+- Delivery verifier.
+- Reputation engine and trust graph.
+- Arbitration engine.
+- NC credit ledger.
+- Team manager.
+- Qwen wrapper with fallback.
+- Next.js CoAgenta Console, Hire Agents, Bounty Board, Docs, Agent Profile, Transaction Workbench.
 
-### Week 3 (June 18–24): Trust Layer
-- [ ] Delivery Verifier: automated acceptance checking
-- [ ] Reputation System: ratings, time decay, transitive trust
-- [ ] Credit ledger: balance tracking, transfer, audit
-- [ ] Relationship types: Subscription + Open Bounty + Verification
-- [ ] Tests for verification and reputation pipeline
+Explicitly out of scope for hackathon MVP:
 
-### Week 4 (June 25 – July 1): Advanced + Demo
-- [ ] Arbitration Agent: automated dispute resolution
-- [ ] Team Formation: assemble, coordinate, disband, payout
-- [ ] Demo scenario: Competitive Analysis Report orchestration
-- [ ] Next.js UI: React Flow graph + floating cards + 7-scene demo
-- [ ] Draft demo video recording
+- Real user auth and multi-tenant org permissions.
+- Real escrow, blockchain settlement, KYC/AML, production compliance.
+- Persistent database migration.
+- Fully hosted agent runtime marketplace.
+- Real MCP server publishing flow.
 
-### Week 5 (July 2–8): Polish & Submit
-- [ ] Architecture diagram (final)
-- [ ] README.md + README_CN.md
-- [ ] API documentation
-- [ ] Demo video (final, <3 min, English voiceover)
-- [ ] Alibaba Cloud deployment
-- [ ] Devpost submission
+## Submission Priorities
 
-## Key Design Decisions
+### Must Ship
 
-1. **No LangChain**: Custom lightweight agent loop shows engineering depth
-2. **Structured Protocol**: JSON messages between agents, not natural language
-3. **Compose Over Inherit**: Capabilities injected, not baked into class hierarchy
-4. **Test From Day 1**: Every module ships with tests
-5. **Bilingual Docs**: Chinese for hackathon, English for global GitHub
+- CoAgenta-first README and docs.
+- Working landing page.
+- Working Console at `/console`.
+- Working Hire Agents and Bounty Board.
+- Working transaction workbench.
+- Reliable fallback path without `QWEN_API_KEY`.
+- Demo video under 3 minutes.
+- Clear Devpost copy explaining Agent society and Qwen role.
 
-## Post-Hackathon Roadmap
+### Should Ship
 
-| Phase | Timeline | Goal |
-|-------|----------|------|
-| Hackathon | Week 1-5 | MVP, 8 CORE types, demo, submit |
-| Launch | Week 6-8 | HN, V2EX, 掘金, r/LLMDevs. Target: 200+ stars |
-| Community | Month 2-3 | Accept PRs, grow relationship types, improve docs |
-| Protocol RFC | Month 3-6 | Publish ACP as standalone spec |
-| Ecosystem | Month 6+ | SDK, marketplace, plugins |
+- Alibaba Cloud deployment path.
+- Cleaner architecture diagram reflecting CoAgenta + ACP.
+- English README parity with README_CN.
+- Recorded proof that lint/build pass.
+
+### Could Ship
+
+- More realistic connector examples.
+- Better visual polish for mobile.
+- Additional bounties and agent profiles.
+- Docs for adding a new verifier or negotiation strategy.
+
+## Quality Gate
+
+Before submission:
+
+```bash
+pytest tests/ -q
+ruff check acp/ tests/ demo/
+python -m mypy acp/ --ignore-missing-imports
+
+cd web
+npm run lint
+npm run build
+```
+
+Known caveat: Python static checks may already have pre-existing ruff/mypy environment issues. Do not hide them; document actual status.
+
+## Naming Rules
+
+- Use `CoAgenta` for product, site, app, and GitHub-facing project narrative.
+- Use `ACP` only for the underlying protocol and Python primitives.
+- Avoid `AgentVerse` as the primary name because it sounds metaverse-like and collides with existing names.
+- Do not reintroduce `Agent Commerce Network` as the main product name unless the whole brand strategy changes again.

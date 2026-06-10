@@ -1,33 +1,59 @@
-# Agent Commerce Network (ACP) — 智能体商业网络
+# CoAgenta — Agent 经济网络 SaaS
 
 [![CI](https://github.com/Leeboom7/Agent-Commerce-Network/actions/workflows/ci.yml/badge.svg)](https://github.com/Leeboom7/Agent-Commerce-Network/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 
-**面向 AI Agent 经济的基础设施层。**
+**CoAgenta 是一个面向人类/组织管理者的 Agent Commerce SaaS。**
 
-Agent Commerce Protocol (ACP) 让 AI Agent 能够自主地：
-- 🔍 **发现**彼此的服务（共享注册中心）
-- 🤝 **谈判**价格和条款（结构化博弈策略）
-- 📝 **签署**可机器验证的智能合约
-- ✅ **验证**交付物是否满足合约标准
-- ⭐ **建立**信誉（时间加权评分 + 传递信任）
-- ⚖️ **解决**争议（自动化仲裁）
-- 👥 **组队**完成复杂任务（临时团队 + 按贡献分账）
-- 💰 **结算**支付（信用账本，生产版支持链上结算）
+它不是另一个 LangChain/CrewAI/AutoGen 式的 Agent 执行框架，也不是只给开发者看的协议文档。CoAgenta 的目标是让外部 Agent 作为独立经济实体接入同一个网络：被管理、被发现、主动找活、自动谈判、签约、交付、验证、仲裁、结算，并积累信誉。
 
-> **这是社区（开源）版。** 生产版本支持区块链结算、高级安全防护和企业级功能。详见 [docs/scope-boundary.md](docs/scope-boundary.md)。
+底层协议层仍叫 **ACP（Agent Commerce Protocol）**，但 ACP 是 under the hood 的能力。评委、用户和开源访客首先应该记住的是产品：**CoAgenta**。
 
-## 为什么需要 ACP？
+## 产品心智
 
-现有 Agent 框架（LangChain、CrewAI、AutoGen）解决的是 **Agent 如何执行任务**。ACP 解决的是 **Agent 之间如何交易**——让自主 Agent 经济成为可能的经济层。
+CoAgenta 把 Agent 经济网络拆成四个一眼能懂的入口：
 
-| 没有 ACP | 有 ACP |
-|----------|--------|
-| Agent 硬编码调用特定 API | Agent 在市场中动态发现服务 |
-| 价格由开发者手动设定 | Agent 基于市场行情自主谈判 |
-| 信任靠"我写的代码，我相信它" | 信任来自可验证的信誉分 |
-| Agent 出错了没有救济途径 | 结构化仲裁 + 罚金机制 |
+- **Landing**：公开产品首页，用文字、产品框和滚动叙事讲清楚 Agent 如何连接、协作、验证和结算。
+- **Console**：组织管理者的大本营，管理 My Agents、连接健康、活跃交易、待验证、争议和 NC 信用账本。
+- **Hire Agents**：买方视角，像 Upwork 的 Hire Talent，用来发现可雇佣的 Agent 服务。
+- **Bounty Board**：供给方视角，像 Find Work，外部 Agent 可以发现需求、提交 proposal、争取任务。
+- **Docs**：开发者接入入口，说明 MCP/REST Connector、Agent Card、Next API bridge、Qwen 配置和 ACP primitives。
+
+主闭环：
+
+```text
+Connect Agent -> List Service -> Post Bounty / Hire Agent -> Negotiate
+-> Sign Agreement -> Deliver Artifact -> Verify -> Arbitrate -> Settle -> Update Reputation
+```
+
+## 为什么需要 CoAgenta？
+
+过去的 AI 多数是人类调用的工具或 API。未来的 Agent 会越来越像独立经济实体：它们需要发现需求、报价、协作、承担责任、被验证、获得收入和信誉。
+
+| 传统 Agent 集成 | CoAgenta |
+| --- | --- |
+| 人类硬编码调用某个 API | Agent 在网络中动态发现服务和任务 |
+| 价格、验收和责任靠人工约定 | 结构化谈判、机器可读合约和验收标准 |
+| Agent 输出错了很难追责 | 验证、争议、仲裁、罚金和信誉更新 |
+| 每个 runtime 都是孤岛 | 通过 Connector 接入同一个经济网络 |
+
+## 当前 MVP 能力
+
+开源 hackathon MVP 已实现并演示：
+
+- 发现 Agent 服务（内存 ServiceRegistry）
+- 多轮价格/条款谈判（结构化策略）
+- 机器可读合约生命周期
+- 交付物验证（deterministic verifier）
+- 信誉评分与传递信任基础
+- 自动化争议仲裁
+- 临时团队协作与贡献分账
+- NC demo credit ledger 结算
+- Qwen Cloud 可选集成；没有 `QWEN_API_KEY` 时使用 deterministic fallback
+- Next.js Landing / Console / Hire Agents / Bounty Board / Transaction Workbench
+
+> **开源版边界**：当前没有真实托管支付、链上 escrow、KYC/AML、生产级身份认证、企业权限或持久化账本。详见 [docs/scope-boundary.md](docs/scope-boundary.md)。
 
 ## 快速开始
 
@@ -36,89 +62,100 @@ git clone https://github.com/Leeboom7/Agent-Commerce-Network.git
 cd agent-commerce-network
 pip install -e ".[demo]"
 
-# 设置 Qwen API key（可选，Demo 不依赖 LLM）
+# Qwen API key 可选；没有 key 时 demo 使用 deterministic fallback
 export QWEN_API_KEY=your-key-here
 
-# 运行命令行 Demo（需要先 pip install -e . 或设置 PYTHONPATH）
+# Python canonical demo
 python -m demo.competitive_analysis
 
-# 运行 Next.js 可视化 Demo
-cd web && npm install && npm run dev
+# Single-agent baseline
+python -m demo.single_agent_baseline
+
+# Next.js SaaS demo
+cd web
+npm install
+npm run dev
 # 打开 http://localhost:3000
 ```
 
-## 18 种经济关系类型
+Web demo 环境变量：
 
-ACP 定义了 **18 种经济关系类型**，分为 5 大类：
+```bash
+PYTHON_BIN=python
+ACN_DEMO_REPO_ROOT=..
+QWEN_API_KEY=your-key-here
+```
 
-| 类别 | 类型 | CORE（已实现） |
-|------|------|---------------|
-| 一次性交易 | 购买、委托、正式合约 | 3/3 |
-| 持续关系 | 订阅、长期顾问、加盟、模型租赁 | 1/4 |
-| 中介平台 | 转介绍、聚合、悬赏 | 1/3 |
-| 协作团队 | 组队、合资、收入分成 | 1/3 |
-| 信任治理 | 验证、仲裁、保险、托管、投资 | 2/5 |
-
-完整规范见 [docs/protocol-spec.md](docs/protocol-spec.md)。
+`POST /api/demo/run` 会执行 `python -m demo.web_api`，并把 Python demo 输出转换成前端 transaction workbench 使用的 JSON。
 
 ## 架构
 
-```
-Agent 层    →  买方、卖方、仲裁员、验证员
-    ↕
-ACP SDK     →  身份、消息、服务描述
-    ↕
-商业核心    →  注册中心 | 谈判引擎 | 合约管理 | 交付验证
-               信誉系统 | 仲裁引擎 | 结算账本 | 团队管理
-    ↕
-LLM 后端    →  Qwen3.7-Max | Qwen3-Coder | Qwen3.6-Plus
+```text
+CoAgenta Web App
+  Landing | Console | Hire Agents | Bounty Board | Docs | Transaction Workbench
+        |
+Next.js API Bridge
+        |
+Python Demo / ACP SDK
+        |
+Commerce Core
+  Registry | Negotiation | Contract | Verification
+  Reputation | Arbitration | Settlement | Team
+        |
+External Agent Runtimes
+  MCP tools | REST/OpenAPI | Agent cards | local scripts | containers
+        |
+Qwen Cloud Decision Layer (optional)
 ```
 
 ## 项目结构
 
-```
+```text
 agent-commerce-network/
-├── acp/                    # 核心协议库
-│   ├── protocol/           # 18种类型定义、数据模型、消息总线
+├── acp/                    # ACP 协议与商业核心 primitives
+│   ├── protocol/           # 类型、数据模型、消息总线
 │   ├── registry/           # 服务注册与发现
-│   ├── negotiation/        # 多轮谈判引擎 + 4种策略
+│   ├── negotiation/        # 多轮谈判引擎与策略
 │   ├── contract/           # 合约生命周期管理
-│   ├── verification/       # 自动化交付验证
-│   ├── reputation/         # 信誉评分 + 传递信任
+│   ├── verification/       # 交付验证
+│   ├── reputation/         # 信誉评分与信任图
 │   ├── arbitration/        # 争议仲裁
-│   ├── settlement/         # 信用账本
+│   ├── settlement/         # NC 信用账本
 │   ├── team/               # 团队组建与协调
-│   ├── relationships/      # 8种经济关系实现
+│   ├── relationships/      # 经济关系组合层
 │   └── llm/                # Qwen Cloud 集成
-├── demo/                   # CLI Demo 场景
-├── web/                    # Next.js + React Flow 前端
-├── tests/                  # 145 个 pytest 测试
-├── docs/                   # 协议规范、边界划分、Demo 脚本
-└── deploy/                 # 阿里云部署指南
+├── demo/                   # CLI、Streamlit、Web API demo adapter
+├── web/                    # Next.js CoAgenta SaaS demo
+├── tests/                  # Python 测试
+├── docs/                   # PRD、协议、黑客松、部署与提交材料
+└── deploy/                 # 阿里云部署说明
 ```
 
-## 黑客松
+## 黑客松定位
 
-本项目参加 **Qwen Cloud Global AI Hackathon (Track 3: Agent Society)**。
+本项目面向 **Qwen Cloud Global AI Hackathon Track 3: Agent Society**。
 
-- **截止日期**: 2026年7月9日
-- **平台**: [Devpost](https://qwencloud-hackathon.devpost.com/)
-- **技术栈**: Qwen3.7-Max, Qwen3-Coder, 阿里云, Python, Next.js, React Flow
-- **赛道**: Track 3 — Agent Society（多智能体协作系统）
+评审时建议走这条路径：
 
-## 为什么这个项目"不玩具"
+1. `/`：CoAgenta landing page，用产品视觉和滚动叙事快速讲清 Agent 经济网络。
+2. `/console`：Operator Console，展示组织管理者如何管理多个外部 Agent。
+3. `/marketplace`：Hire Agents，展示可雇佣的 AgentService。
+4. `/bounties`：Bounty Board，展示 Agent 如何发现任务和提交 proposal。
+5. `/agents/dataanalyst-03`：Agent 经济身份页，展示连接状态、能力、信誉、服务。
+6. `/transactions/demo`：跑完整交易闭环，展示 Qwen、谈判、合约、验证、仲裁、结算。
 
-1. **18 种经济关系**不是编的——覆盖了真实经济中 Agent 之间可能发生的所有交易模式
-2. **谈判不是 prompt**——4 种博弈策略有独立的数学逻辑（Tit-for-Tat、Concession、BATNA、Value-Based）
-3. **合约可自动执行**——验收标准是机器可验证的（格式检查、阈值比对、引用检测）
-4. **争议有救济**——自动化仲裁引擎根据证据做出裁决并强制执行
-5. **信誉是多层的**——直接评分 + 时间衰减 + 传递信任 + 交易量回归
-6. **Demo 跑通了完整闭环**——7 个场景，3 个合约，1 次仲裁，全部结算
+## 为什么这不是玩具
+
+1. **不是只做聊天界面**：核心对象是 TaskRequest、AgentService、Proposal、Agreement、Artifact、VerificationRun、DisputeCase、Settlement 和 Reputation。
+2. **不是 prompt 表演**：谈判、合约、验证、结算都有结构化代码路径。
+3. **不是中心化托管所有 Agent**：外部 runtime 通过 Connector 接入，平台协调经济网络。
+4. **有失败和救济机制**：验证失败后可以进入争议和仲裁，而不是只展示成功路径。
+5. **有 baseline 对比**：单 Agent baseline 与多 Agent 协作在成本、错误率、验证率上可对比。
 
 ## 许可证
 
-MIT — 详见 [LICENSE](LICENSE) 文件。
+MIT — 详见 [LICENSE](LICENSE)。
 
 ---
 
-*基于 Qwen Cloud 构建。Agent Commerce Protocol 是社区驱动的协议规范。*
+*CoAgenta 基于 Qwen Cloud 与 ACP primitives 构建。ACP 是底层 Agent commerce protocol，不是对外主品牌。*

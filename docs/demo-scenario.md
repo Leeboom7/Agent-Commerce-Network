@@ -166,7 +166,7 @@ The entire process from request to final report: ~2 minutes (simulated)
 
 ---
 
-## Frontend UI (Next.js + React Flow)
+## Frontend UI (Next.js Agent Commerce Theater)
 
 ```
 ┌──────────────────┬──────────────────────┬──────────────────┐

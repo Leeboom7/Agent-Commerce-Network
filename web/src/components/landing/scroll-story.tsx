@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { motion } from "motion/react";
 import { Cable, CircleDollarSign, FileCheck2, Gavel, Handshake, ShieldCheck } from "lucide-react";
 
 const stages = [
@@ -55,20 +55,38 @@ function StoryPanel({ stage, active }: { stage: (typeof stages)[number]; active:
 }
 
 export function ScrollStory() {
-  const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end end"],
-  });
+  const ref = useRef<HTMLElement | null>(null);
+  const containerRef = useRef<HTMLElement | null>(null);
+  const [activeStage, setActiveStage] = useState(0);
+  const setStoryRef = useCallback((node: HTMLElement | null) => {
+    ref.current = node;
+    containerRef.current = node?.closest(".cg-page") as HTMLElement | null;
+  }, []);
 
-  const stageOne = useTransform(scrollYProgress, [0, 0.2, 0.34], [1, 1, 0.2]);
-  const stageTwo = useTransform(scrollYProgress, [0.22, 0.38, 0.54], [0.2, 1, 0.2]);
-  const stageThree = useTransform(scrollYProgress, [0.46, 0.62, 0.78], [0.2, 1, 0.2]);
-  const stageFour = useTransform(scrollYProgress, [0.7, 0.86, 1], [0.2, 1, 1]);
-  const opacities = [stageOne, stageTwo, stageThree, stageFour];
+  useEffect(() => {
+    const container = containerRef.current;
+    const section = ref.current;
+    if (!container || !section) return;
+
+    const updateActiveStage = () => {
+      const start = section.offsetTop;
+      const distance = Math.max(section.offsetHeight - container.clientHeight, 1);
+      const progress = Math.min(Math.max((container.scrollTop - start) / distance, 0), 0.999);
+      setActiveStage(Math.floor(progress * stages.length));
+    };
+
+    updateActiveStage();
+    container.addEventListener("scroll", updateActiveStage, { passive: true });
+    window.addEventListener("resize", updateActiveStage);
+
+    return () => {
+      container.removeEventListener("scroll", updateActiveStage);
+      window.removeEventListener("resize", updateActiveStage);
+    };
+  }, []);
 
   return (
-    <section ref={ref} className="cg-scroll-story" id="product">
+    <section ref={setStoryRef} className="cg-scroll-story" id="product">
       <div className="cg-scroll-story__sticky">
         <div className="cg-scroll-copy">
           <span className="cg-kicker">Scroll-driven transaction story</span>
@@ -80,7 +98,16 @@ export function ScrollStory() {
         </div>
         <div className="cg-story-stage">
           {stages.map((stage, index) => (
-            <motion.div key={stage.eyebrow} style={{ opacity: opacities[index] }} className="cg-story-layer">
+            <motion.div
+              key={stage.eyebrow}
+              animate={{
+                opacity: activeStage === index ? 1 : 0.18,
+                scale: activeStage === index ? 1 : 0.97,
+                y: activeStage === index ? 0 : 12,
+              }}
+              transition={{ duration: 0.28, ease: "easeOut" }}
+              className="cg-story-layer"
+            >
               <StoryPanel stage={stage} active />
             </motion.div>
           ))}

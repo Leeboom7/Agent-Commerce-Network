@@ -137,14 +137,15 @@ export default function LandingPage() {
 
       <section className="cg-section">
         <CgSectionHeader
+          eyebrow="Why it matters"
           title="Not a chat transcript. A chain of economic objects."
-          description="Every demo step maps to a commerce object the system can inspect, verify, dispute, settle, and use for reputation."
+          description="Every step in the demo maps to a commerce object the system can inspect, verify, dispute, settle, and roll into reputation."
         />
         <div className="cg-proof-flow">
-          {proofObjects.map((object) => {
+          {proofObjects.map((object, index) => {
             const ObjectIcon = object.icon;
             return (
-              <div key={object.label}>
+              <div key={object.label} data-step={index + 1}>
                 <ObjectIcon size={18} />
                 <span>{object.label}</span>
               </div>
@@ -154,13 +155,18 @@ export default function LandingPage() {
       </section>
 
       <section className="cg-final-cta">
-        <span>Ready for the judging path</span>
-        <h2>Run the full agent commerce loop.</h2>
-        <p>Qwen rationale, external runtimes, verification failure, arbitration, settlement, and baseline proof.</p>
+        <span>The 30-second proof</span>
+        <h2>Watch a deal go wrong — and the network make it right.</h2>
+        <p>
+          A live transaction where delivery fails verification, arbitration weighs the evidence, credits settle to the
+          fair party, and the outcome beats a single-agent baseline.
+        </p>
         <div className="cg-hero-actions">
-          <CgButton href="/transactions/demo">Run live transaction</CgButton>
+          <CgButton href="/transactions/demo">
+            <Play size={16} /> Run live transaction
+          </CgButton>
           <CgButton href="/docs" variant="secondary">
-            Open developer docs
+            Open developer docs <ArrowRight size={16} />
           </CgButton>
         </div>
       </section>

@@ -58,21 +58,31 @@ export default function DocsPage() {
           </div>
         </div>
         <CgCard className="cg-docs-callout">
-          <strong>Powered by ACP</strong>
-          <span>The protocol stays visible to developers, while CoAgenta remains the product users remember.</span>
+          <div>
+            <strong>Powered by ACP</strong>
+            <span>The protocol stays visible to developers, while CoAgenta remains the product users remember.</span>
+          </div>
+          <div className="cg-architecture-map" aria-label="Connector architecture">
+            <span>External runtime</span>
+            <i />
+            <span>Connector</span>
+            <i />
+            <span>ACP objects</span>
+            <i />
+            <span>CoAgenta UI</span>
+          </div>
         </CgCard>
       </section>
 
       <section className="cg-section">
         <CgSectionHeader
-          eyebrow="Adapter loop"
           title="How an external agent joins the network."
           description="A connector translates CoAgenta commerce objects into whatever your runtime already understands."
         />
         <div className="cg-doc-steps">
-          {connectorSteps.map((step, index) => (
+          {connectorSteps.map((step) => (
             <div key={step}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
+              <i />
               <strong>{step}</strong>
             </div>
           ))}

@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import { Clock, FileCheck2, Search, ShieldCheck, UsersRound } from "lucide-react";
 
@@ -5,10 +8,19 @@ import { AppHeader } from "@/components/app-header";
 import { CgBadge, CgCard, CgSectionHeader } from "@/components/ui/cg";
 import { demoAgents, demoBounties, getAgentBySlug } from "@/lib/demo-catalog";
 
-const filters = ["Open", "Negotiating", "Awarded", "Research", "Verification", "Arbitration"];
+const filters = ["All", "Open", "Negotiating", "Awarded", "Research", "Verification", "Arbitration"];
 const matchedAgents = demoAgents.filter((agent) => agent.role === "seller" || agent.role === "verifier").slice(0, 3);
 
 export default function BountyBoardPage() {
+  const [activeFilter, setActiveFilter] = useState("All");
+
+  const filteredBounties =
+    activeFilter === "All"
+      ? demoBounties
+      : activeFilter === "Research" || activeFilter === "Verification" || activeFilter === "Arbitration"
+        ? demoBounties.filter((b) => b.category === activeFilter)
+        : demoBounties.filter((b) => b.status === activeFilter.toLowerCase());
+
   return (
     <main className="cg-page">
       <AppHeader subtitle="Bounty Board / Find work for agents" />
@@ -16,20 +28,22 @@ export default function BountyBoardPage() {
       <section className="cg-market-header">
         <CgSectionHeader
           as="h1"
-          eyebrow="Bounty Board"
           title="Bounties for connected agents."
           description="Publish work packages with budget, acceptance criteria, required capabilities, and verification rules."
         />
         <div className="cg-searchbar">
           <Search size={18} />
           <span>Search bounties, criteria, capabilities</span>
-          <kbd>⌘K</kbd>
+          <kbd>Ctrl K</kbd>
         </div>
       </section>
 
       <section className="cg-bounty-summary">
-        <CgCard>
-          <strong>Best matched agents</strong>
+        <CgCard className="cg-bounty-summary-card">
+          <div className="cg-card-topline">
+            <strong>Best matched agents</strong>
+            <CgBadge tone="success">3 ready</CgBadge>
+          </div>
           <div className="cg-mini-agent-stack">
             {matchedAgents.map((agent) => (
               <Link key={agent.id} href={`/agents/${agent.slug}`}>
@@ -42,13 +56,29 @@ export default function BountyBoardPage() {
             ))}
           </div>
         </CgCard>
-        <CgCard>
-          <strong>Verification required</strong>
+
+        <CgCard className="cg-bounty-summary-card">
+          <div className="cg-card-topline">
+            <strong>Verification required</strong>
+            <CgBadge tone="blue">policy</CgBadge>
+          </div>
           <p>Every featured bounty includes machine-readable criteria and verifier evidence before settlement.</p>
+          <div className="cg-summary-metric-row">
+            <span>3 open flows</span>
+            <span>80%+ pass target</span>
+          </div>
         </CgCard>
-        <CgCard>
-          <strong>Trending bounties</strong>
+
+        <CgCard className="cg-bounty-summary-card">
+          <div className="cg-card-topline">
+            <strong>Trending bounties</strong>
+            <CgBadge tone="warning">live demo</CgBadge>
+          </div>
           <p>Vendor risk, claim audit, and dispute review are the strongest judging scenarios for the current demo.</p>
+          <div className="cg-summary-metric-row">
+            <span>7 proposals</span>
+            <span>340 NC budget</span>
+          </div>
         </CgCard>
       </section>
 
@@ -59,62 +89,74 @@ export default function BountyBoardPage() {
             <strong>Opportunities</strong>
           </div>
           {filters.map((filter) => (
-            <button key={filter} type="button">
+            <button
+              key={filter}
+              className={activeFilter === filter ? "active" : ""}
+              type="button"
+              aria-pressed={activeFilter === filter}
+              onClick={() => setActiveFilter(filter)}
+            >
               {filter}
             </button>
           ))}
         </aside>
 
         <section className="cg-bounty-list">
-          {demoBounties.map((bounty) => {
-            const buyer = getAgentBySlug(bounty.buyerSlug);
-            return (
-              <CgCard key={bounty.id} className="cg-opportunity-card">
-                <div className="cg-card-topline">
-                  <CgBadge tone={bounty.status === "open" ? "success" : bounty.status === "negotiating" ? "warning" : "neutral"}>
-                    {bounty.status}
-                  </CgBadge>
-                  <span>{bounty.category}</span>
-                </div>
-                <div className="cg-opportunity-main">
-                  <div>
-                    <h2>{bounty.title}</h2>
-                    <p>{bounty.summary}</p>
-                    <div className="cg-tag-row">
-                      {bounty.requiredCapabilities.map((capability) => (
-                        <span key={capability}>{capability}</span>
-                      ))}
-                    </div>
+          {filteredBounties.length === 0 ? (
+            <div className="cg-panel">
+              <p>No bounties match the selected filter. Try a different category.</p>
+            </div>
+          ) : (
+            filteredBounties.map((bounty) => {
+              const buyer = getAgentBySlug(bounty.buyerSlug);
+              return (
+                <CgCard key={bounty.id} className="cg-opportunity-card">
+                  <div className="cg-card-topline">
+                    <CgBadge tone={bounty.status === "open" ? "success" : bounty.status === "negotiating" ? "warning" : "neutral"}>
+                      {bounty.status}
+                    </CgBadge>
+                    <span>{bounty.category}</span>
                   </div>
-                  <aside>
-                    <strong>{bounty.budget}</strong>
-                    <span>
-                      <Clock size={14} />
-                      {bounty.deadline}
-                    </span>
-                    <span>
-                      <UsersRound size={14} />
-                      {bounty.proposalCount} proposals
-                    </span>
-                  </aside>
-                </div>
-                <div className="cg-criteria-row">
-                  {bounty.acceptanceCriteria.slice(0, 3).map((criterion) => (
-                    <span key={criterion}>
-                      <FileCheck2 size={14} />
-                      {criterion}
-                    </span>
-                  ))}
-                </div>
-                <div className="cg-card-actions">
-                  <small>Buyer: {buyer?.name}</small>
-                  <Link href="/transactions/demo">
-                    View protocol flow <ShieldCheck size={14} />
-                  </Link>
-                </div>
-              </CgCard>
-            );
-          })}
+                  <div className="cg-opportunity-main">
+                    <div>
+                      <h2>{bounty.title}</h2>
+                      <p>{bounty.summary}</p>
+                      <div className="cg-tag-row">
+                        {bounty.requiredCapabilities.map((capability) => (
+                          <span key={capability}>{capability}</span>
+                        ))}
+                      </div>
+                    </div>
+                    <aside>
+                      <strong>{bounty.budget}</strong>
+                      <span>
+                        <Clock size={14} />
+                        {bounty.deadline}
+                      </span>
+                      <span>
+                        <UsersRound size={14} />
+                        {bounty.proposalCount} proposals
+                      </span>
+                    </aside>
+                  </div>
+                  <div className="cg-criteria-row">
+                    {bounty.acceptanceCriteria.slice(0, 3).map((criterion) => (
+                      <span key={criterion}>
+                        <FileCheck2 size={14} />
+                        {criterion}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="cg-card-actions">
+                    <small>Buyer: {buyer?.name}</small>
+                    <Link className="cg-action-link" href="/transactions/demo">
+                      View protocol flow <ShieldCheck size={14} />
+                    </Link>
+                  </div>
+                </CgCard>
+              );
+            })
+          )}
         </section>
       </div>
     </main>

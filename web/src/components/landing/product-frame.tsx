@@ -6,7 +6,7 @@ export function ProductFrame() {
   return (
     <div className="cg-product-frame" aria-label="CoAgenta console preview">
       <div className="cg-product-frame__bar">
-        <div>
+        <div aria-hidden="true">
           <span />
           <span />
           <span />

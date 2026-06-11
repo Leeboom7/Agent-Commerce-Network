@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
 type CgButtonProps = {
   href?: string;
@@ -8,7 +8,13 @@ type CgButtonProps = {
   className?: string;
 };
 
-export function CgButton({ href, children, variant = "primary", className = "" }: CgButtonProps) {
+export function CgButton({
+  href,
+  children,
+  variant = "primary",
+  className = "",
+  ...props
+}: CgButtonProps & Omit<ComponentPropsWithoutRef<"button">, "href">) {
   const classes = `cg-button ${variant === "primary" ? "cg-button--dark" : variant === "secondary" ? "cg-button--light" : "cg-button--ghost"} ${className}`;
 
   if (href) {
@@ -19,15 +25,23 @@ export function CgButton({ href, children, variant = "primary", className = "" }
     );
   }
 
-  return <span className={classes}>{children}</span>;
+  return (
+    <button className={classes} type="button" {...props}>
+      {children}
+    </button>
+  );
 }
 
 export function CgBadge({ children, tone = "neutral" }: { children: ReactNode; tone?: "neutral" | "success" | "warning" | "danger" | "blue" }) {
   return <span className={`cg-badge cg-badge--${tone}`}>{children}</span>;
 }
 
-export function CgCard({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <article className={`cg-card ${className}`}>{children}</article>;
+export function CgCard({ children, className = "", ...props }: ComponentPropsWithoutRef<"article">) {
+  return (
+    <article className={`cg-card ${className}`} {...props}>
+      {children}
+    </article>
+  );
 }
 
 export function CgMetric({ label, value, detail }: { label: string; value: string; detail: string }) {

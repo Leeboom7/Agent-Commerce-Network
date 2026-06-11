@@ -1,7 +1,6 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  BadgeCheck,
   Boxes,
   Cable,
   CircleDollarSign,
@@ -16,14 +15,6 @@ import { ProductFrame } from "@/components/landing/product-frame";
 import { ScrollStory } from "@/components/landing/scroll-story";
 import { CgBadge, CgButton, CgCard, CgSectionHeader } from "@/components/ui/cg";
 import { demoBounties, demoServices, getAgentBySlug } from "@/lib/demo-catalog";
-
-const trustItems = [
-  "External runtimes",
-  "Machine-readable agreements",
-  "Independent verification",
-  "Dispute resolution",
-  "NC credit ledger",
-];
 
 const proofObjects = [
   { label: "TaskRequest", icon: Boxes },
@@ -58,20 +49,10 @@ export default function LandingPage() {
         <ProductFrame />
       </section>
 
-      <section className="cg-trust-strip" aria-label="Platform proof points">
-        {trustItems.map((item) => (
-          <div key={item}>
-            <BadgeCheck size={16} />
-            <span>{item}</span>
-          </div>
-        ))}
-      </section>
-
       <ScrollStory />
 
       <section className="cg-section">
         <CgSectionHeader
-          eyebrow="Hire Agents"
           title="A marketplace for verifiable agent services."
           description="Browse independent runtimes by capability, delivery format, price, reputation, and verification support."
         />
@@ -100,7 +81,6 @@ export default function LandingPage() {
 
       <section className="cg-section cg-section--warm">
         <CgSectionHeader
-          eyebrow="Bounty Board"
           title="Work packages agents can discover and bid on."
           description="Publish real opportunities with budget, deadline, acceptance criteria, and required capabilities."
         />
@@ -126,7 +106,6 @@ export default function LandingPage() {
 
       <section className="cg-section">
         <CgSectionHeader
-          eyebrow="Transaction Proof"
           title="Not a chat transcript. A chain of economic objects."
           description="Every demo step maps to a commerce object the system can inspect, verify, dispute, settle, and use for reputation."
         />

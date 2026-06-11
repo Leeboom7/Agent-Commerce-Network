@@ -150,7 +150,7 @@ export default async function NewTaskPage({ searchParams }: NewTaskPageProps) {
         </CgCard>
       </section>
 
-      <section className="cg-card-grid cg-card-grid--three">
+      <section className="cg-card-grid cg-card-grid--three cg-task-proof-grid">
         {[
           {
             title: "Agreement snapshot",

@@ -10,7 +10,13 @@ type AgentProfilePageProps = {
   params: Promise<{ slug: string }>;
 };
 
-const tabs = ["Overview", "Services", "Work History", "Connector", "Reputation"];
+const tabs = [
+  { href: "#overview", label: "Overview" },
+  { href: "#services", label: "Services" },
+  { href: "#history", label: "Work History" },
+  { href: "#connector", label: "Connector" },
+  { href: "#reputation", label: "Reputation" },
+];
 
 export function generateStaticParams() {
   return demoAgents.map((agent) => ({ slug: agent.slug }));
@@ -71,14 +77,14 @@ export default async function AgentProfilePage({ params }: AgentProfilePageProps
 
       <nav className="cg-tabs" aria-label="Agent profile sections">
         {tabs.map((tab) => (
-          <a key={tab} className={tab === "Overview" ? "active" : ""}>
-            {tab}
+          <a key={tab.href} className={tab.label === "Overview" ? "active" : ""} href={tab.href}>
+            {tab.label}
           </a>
         ))}
       </nav>
 
-      <section className="cg-profile-grid">
-        <CgCard className="cg-profile-overview">
+      <section className="cg-profile-grid" id="overview">
+        <CgCard className="cg-profile-overview" id="connector">
           <div className="cg-panel-heading">
             <div>
               <Radio size={18} />
@@ -106,7 +112,7 @@ export default async function AgentProfilePage({ params }: AgentProfilePageProps
           </div>
         </CgCard>
 
-        <CgCard>
+        <CgCard id="reputation">
           <div className="cg-panel-heading">
             <div>
               <ShieldCheck size={18} />
@@ -158,7 +164,7 @@ export default async function AgentProfilePage({ params }: AgentProfilePageProps
         </CgCard>
       </section>
 
-      <section className="cg-profile-services">
+      <section className="cg-profile-services" id="services">
         <div className="cg-panel-heading">
           <div>
             <Cable size={18} />
@@ -191,14 +197,16 @@ export default async function AgentProfilePage({ params }: AgentProfilePageProps
         </div>
       </section>
 
-      <section className="cg-profile-services">
+      <section className="cg-profile-services" id="history">
         <div className="cg-panel-heading">
           <div>
             <Activity size={18} />
             <span>Recent commerce</span>
           </div>
         </div>
-        <CgActivityFeed items={agent.recentCommerce} />
+        <CgCard>
+          <CgActivityFeed items={agent.recentCommerce} />
+        </CgCard>
       </section>
     </main>
   );

@@ -1,17 +1,38 @@
 import { spawn } from "node:child_process";
+import path from "node:path";
+import { existsSync } from "node:fs";
 
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+function resolvePythonCommand(repoRoot: string) {
+  // Explicit override always wins.
+  const override = process.env.PYTHON_BIN || process.env.PYTHON;
+  if (override) return override;
+
+  // Prefer a local virtual environment if one exists (created during setup).
+  const venvCandidates =
+    process.platform === "win32"
+      ? [path.join(repoRoot, ".venv", "Scripts", "python.exe")]
+      : [path.join(repoRoot, ".venv", "bin", "python")];
+
+  for (const candidate of venvCandidates) {
+    if (existsSync(candidate)) return candidate;
+  }
+
+  return "python3";
+}
+
 function runPythonDemo() {
   return new Promise<unknown>((resolve, reject) => {
-    const repoRoot = process.env.ACN_DEMO_REPO_ROOT ?? "..";
+    const repoRoot = path.resolve(process.env.ACN_DEMO_REPO_ROOT ?? path.join(process.cwd(), ".."));
     const pathSeparator = process.platform === "win32" ? ";" : ":";
     const pythonPath = [repoRoot, process.env.PYTHONPATH].filter(Boolean).join(pathSeparator);
-    const pythonCommand = process.env.PYTHON_BIN || process.env.PYTHON || "python";
+    const pythonCommand = resolvePythonCommand(repoRoot);
     const child = spawn(pythonCommand, ["-m", "demo.web_api"], {
+      cwd: repoRoot,
       env: { ...process.env, PYTHONPATH: pythonPath },
       shell: process.platform === "win32",
       stdio: ["ignore", "pipe", "pipe"],

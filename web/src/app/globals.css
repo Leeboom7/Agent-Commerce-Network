@@ -1160,6 +1160,89 @@ button.cg-button {
   font-size: 12px;
 }
 
+/* ---------- Settlement + reputation (workbench panel) ---------- */
+.cg-settlement-rows,
+.cg-reputation-rows {
+  display: grid;
+  gap: 8px;
+}
+
+.cg-settlement-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--cg-line);
+  border-radius: 10px;
+  background: var(--cg-surface-2);
+  padding: 11px 13px;
+}
+
+.cg-settlement-row > span {
+  color: var(--cg-text);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.cg-settlement-row small {
+  color: var(--cg-subtle);
+  font-size: 12px;
+}
+
+.cg-settlement-row small.penalty {
+  color: var(--cg-danger);
+}
+
+.cg-settlement-row strong {
+  color: var(--cg-amber);
+  font-family: var(--font-mono), monospace;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.cg-reputation-row {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.9fr) minmax(0, 1.4fr) auto auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.cg-reputation-row > span {
+  color: var(--cg-text);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.cg-reputation-row i {
+  display: block;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--cg-surface-3);
+  overflow: hidden;
+}
+
+.cg-reputation-row i b {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--cg-success);
+}
+
+.cg-reputation-row small {
+  color: var(--cg-subtle);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+}
+
+.cg-reputation-row strong {
+  color: var(--cg-text);
+  font-family: var(--font-mono), monospace;
+  font-size: 15px;
+  font-weight: 700;
+}
+
 /* ---------- Console grid ---------- */
 .cg-console-alerts {
   width: 100%;
@@ -1360,7 +1443,18 @@ a.cg-health-row:hover,
 
 .cg-signal-card--actionable > div {
   flex: 1;
+  display: grid;
+  gap: 3px;
 }
+
+.cg-signal-card strong,
+  .cg-bounty-summary strong,
+  .cg-docs-callout strong {
+  display: block;
+  color: var(--cg-text);
+  font-size: 15px;
+  font-weight: 640;
+  }
 
 .cg-signal-card--actionable svg:last-child {
   color: var(--cg-muted);
@@ -1368,14 +1462,6 @@ a.cg-health-row:hover,
 
 .cg-signal-card svg {
   color: var(--cg-danger);
-}
-
-.cg-signal-card strong,
-.cg-bounty-summary strong,
-.cg-docs-callout strong {
-  color: var(--cg-text);
-  font-size: 15px;
-  font-weight: 640;
 }
 
 .cg-signal-card span,

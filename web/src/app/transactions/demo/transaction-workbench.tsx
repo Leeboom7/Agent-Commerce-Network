@@ -183,6 +183,52 @@ export default function TransactionWorkbench() {
               <small>fewer errors / lower cost</small>
             </CgCard>
           </section>
+
+          {result ? (
+            <CgCard className="cg-settlement-card">
+              <div className="cg-panel-heading">
+                <div>
+                  <CircleDollarSign size={18} />
+                  <span>Settlement ledger</span>
+                </div>
+                <CgBadge tone="success">credits cleared</CgBadge>
+              </div>
+              <div className="cg-settlement-rows">
+                {result.settlement.payments.map((payment) => (
+                  <div key={payment.agent} className="cg-settlement-row">
+                    <span>{payment.agent}</span>
+                    <small className={payment.penalty > 0 ? "penalty" : ""}>
+                      {payment.penalty > 0 ? `-${payment.penalty.toFixed(2)} penalty` : "no penalty"}
+                    </small>
+                    <strong>{payment.amount.toFixed(2)} NC</strong>
+                  </div>
+                ))}
+              </div>
+            </CgCard>
+          ) : null}
+
+          {result ? (
+            <CgCard className="cg-reputation-card">
+              <div className="cg-panel-heading">
+                <div>
+                  <BadgeCheck size={18} />
+                  <span>Reputation graph</span>
+                </div>
+              </div>
+              <div className="cg-reputation-rows">
+                {Object.entries(result.reputation).map(([agent, rep]) => (
+                  <div key={agent} className="cg-reputation-row">
+                    <span>{agent}</span>
+                    <i>
+                      <b style={{ width: `${Math.min(100, Math.round(rep.success_rate * 100))}%` }} />
+                    </i>
+                    <small>{rep.transactions} txns</small>
+                    <strong>{rep.score.toFixed(1)}</strong>
+                  </div>
+                ))}
+              </div>
+            </CgCard>
+          ) : null}
         </section>
 
         <aside className="cg-workbench-side">

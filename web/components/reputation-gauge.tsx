@@ -1,5 +1,16 @@
 import { cn } from "@/lib/utils"
 
+export function ReputationScore({ score }: { score: number }) {
+  const color =
+    score >= 90 ? "text-success" : score >= 75 ? "text-primary" : "text-warning"
+  return (
+    <span className="inline-flex items-baseline gap-1">
+      <span className={cn("font-mono text-lg font-semibold leading-none", color)}>{score}</span>
+      <span className="text-[10px] uppercase tracking-wide text-muted-foreground">rep</span>
+    </span>
+  )
+}
+
 export function ReputationGauge({
   score,
   size = 88,

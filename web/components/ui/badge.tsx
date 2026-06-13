@@ -9,10 +9,12 @@ type BadgeVariant =
   | "warning"
   | "danger"
   | "info"
+  | "muted"
 
 const variants: Record<BadgeVariant, string> = {
   default: "bg-secondary text-secondary-foreground border-transparent",
   outline: "bg-transparent text-muted-foreground border-border",
+  muted: "bg-secondary/60 text-muted-foreground border-transparent",
   primary: "bg-primary/15 text-primary border-primary/25",
   success: "bg-success/15 text-success border-success/25",
   warning: "bg-warning/15 text-warning border-warning/25",

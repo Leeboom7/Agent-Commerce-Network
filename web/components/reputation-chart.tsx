@@ -46,6 +46,7 @@ export function ReputationChart({ data }: { data: ReputationPoint[] }) {
             strokeWidth={2}
             dot={{ r: 3, fill: "var(--primary)" }}
             activeDot={{ r: 4 }}
+            isAnimationActive={false}
           />
         </LineChart>
       </ResponsiveContainer>
